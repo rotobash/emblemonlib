@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{14F95DC7-973B-4B85-A58F-D5E2BC4EFE03}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>EmbelmonLib</RootNamespace>
+    <AssemblyName>EmbelmonLib</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MyClass.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Combat\CharacterStats.cs" />
+    <Compile Include="Combat\Effectiveness.cs" />
+    <Compile Include="Combat\Effects.cs" />
+    <Compile Include="Combat\LevelingCurve.cs" />
+    <Compile Include="Combat\Move.cs" />
+    <Compile Include="Combat\Party.cs" />
+    <Compile Include="Combat\PhysicalMove.cs" />
+    <Compile Include="Combat\Spell.cs" />
+    <Compile Include="Combat\TurnBasedBattle.cs" />
+    <Compile Include="Data\Enemy.cs" />
+    <Compile Include="Data\NonPlayerCharacter.cs" />
+    <Compile Include="Data\PlayerCharacter.cs" />
+    <Compile Include="Interfaces\Character.cs" />
+    <Compile Include="Interfaces\Combatable.cs" />
+    <Compile Include="Utilities\Animation.cs" />
+    <Compile Include="Utilities\AnimationRule.cs" />
+    <Compile Include="Utilities\ParticleEffect.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\FNA\FNA\FNA.csproj">
+      <Project>{35253CE1-C864-4CD3-8249-4D1319748E8F}</Project>
+      <Name>FNA</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
