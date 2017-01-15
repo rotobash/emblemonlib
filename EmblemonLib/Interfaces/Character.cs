@@ -7,7 +7,7 @@ namespace EmblemonLib.Interfaces
 {
 	public interface Character
 	{
-		bool IsPlayable { get; }
+        string Name { get; }
 
 		void OverworldUpdate(GameTime gameTime);
 		void OverworldDraw(SpriteBatch spritebatch);

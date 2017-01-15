@@ -9,19 +9,21 @@ using EmblemonLib.Utilities;
 
 namespace EmblemonLib.Data
 {
-	public class PlayerCharacter : Combatable, Character
+	public class HybridCharacter : Combatable, Character
 	{
+        string name;
 		bool isMoving;
 		Animation overWorldAnimation;
 
-		public PlayerCharacter(CharacterStats stats, Animation overworldAnim, Animation battleAnim, Dictionary<string, Move> moves) 
-			: base (stats, battleAnim, moves) {
+		public HybridCharacter(CharacterStats stats, Animation overworldAnim, Dictionary<string, Animation> battleAnimations, LevelingCurve levelCurve, Dictionary<string, LevelingCurve> attrCurves, Dictionary<string, Move> moves) 
+			: base (stats, battleAnimations, levelCurve, attrCurves, moves) {
 			overWorldAnimation = overworldAnim;
 		}
 
-		public bool IsPlayable {
-			get { return true; }
-		}
+        public string Name
+        {
+            get { return name; }
+        }
 
 		public void OverworldUpdate(GameTime gameTime) {
 			if (!isMoving) {
@@ -42,7 +44,7 @@ namespace EmblemonLib.Data
 		}
 
 		public void MoveTo (Vector2 newPosition) {
-			bool isMoving = true;
+			isMoving = true;
 			overWorldAnimation.UpdateLocation (newPosition);
 		}
 

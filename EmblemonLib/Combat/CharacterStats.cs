@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace EmblemonLib.Combat
 {
@@ -17,11 +18,15 @@ namespace EmblemonLib.Combat
 	/// 
 	/// </summary>
 	public class CharacterStats
-	{
-		int health;
-		int magic;
+    {
+        public const int STATNUMBER = 8;
 
-		int level;
+        int health;
+		int magic;
+        int experienceNeeded;
+        int experienceTotal;
+
+        int level;
 
 		int strength;
 		int defense;
@@ -42,12 +47,19 @@ namespace EmblemonLib.Combat
 			this.power = power;
 			this.fortitude = fortitude;
 			this.speed = speed;
+        }
 
-		}
-
-		public void LoadStats() {
-
-		}
+        public void LevelUp(Dictionary<string, LevelingCurve> levelingCurves)
+        {
+            health = (int)levelingCurves["Health"].GetExperienceForNextLevel(level);
+            magic = (int)levelingCurves["Magic"].GetExperienceForNextLevel(level);
+            strength = (int)levelingCurves["Strength"].GetExperienceForNextLevel(level);
+            defense = (int)levelingCurves["Defense"].GetExperienceForNextLevel(level);
+            power = (int)levelingCurves["Power"].GetExperienceForNextLevel(level);
+            fortitude = (int)levelingCurves["Fortitude"].GetExperienceForNextLevel(level);
+            speed = (int)levelingCurves["Speed"].GetExperienceForNextLevel(level);
+            level++;
+        }
 
 		public int Health {
 			get { return health; }

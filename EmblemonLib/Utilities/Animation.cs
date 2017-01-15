@@ -28,12 +28,12 @@ namespace EmblemonLib.Utilities
 		/// <param name="frameData">The frames of the animation.</param>
 		/// <param name="location">Where to draw the animation.</param>
 		/// <param name="delay">Time between frames.</param>
-		public Animation (List<Texture2D> frameData, Vector2 location, double delay=0.25f, bool onetimerun=false)
+		public Animation (List<Texture2D> frameData, double delay=0.25f, bool onetimerun=false)
 		{
 			isSpriteSheet = false;
 			this.frameData = frameData;
 			Delay = delay;
-			Location = location;
+			Location = Vector2.Zero;
 			this.onetimerun = onetimerun;
 
 			currentFrameIndex = 0;
@@ -44,20 +44,18 @@ namespace EmblemonLib.Utilities
 		/// Initializes a new instance of the <see cref="EmblemonLib.Utilities.Animation"/> class.
 		/// </summary>
 		/// <param name="spriteSheet">Sprite sheet.</param>
-		/// <param name="frameSize">The size of any frame of animation for the spritesheet.</param>
+		/// <param name="frameSize">The size of any frame of animation for the spritesheet. X=width, Y=height</param>
 		/// <param name="location">Where to draw the animation.</param>
 		/// <param name="delay">Time between delays.</param>
-		public Animation(Texture2D spriteSheet, Rectangle frameSize, Vector2 location, double delay=0.25f, bool onetimerun=false) 
+		public Animation(Texture2D spriteSheet, Point frameSize, double delay=0.25f, bool onetimerun=false) 
 		{
 			isSpriteSheet = true;
 			this.spriteSheet = spriteSheet;
 			Delay = delay;
-			Location = location;
+			Location = Vector2.Zero;
 			this.onetimerun = onetimerun;
 
-			currentFrame = frameSize;
-			currentFrame.X = 0;
-			currentFrame.Y = 0;
+			currentFrame = new Rectangle(0, 0, frameSize.X, frameSize.Y);
 		}
 
 		public void Update(GameTime gameTime) {

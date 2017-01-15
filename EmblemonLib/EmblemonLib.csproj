@@ -5,9 +5,10 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{14F95DC7-973B-4B85-A58F-D5E2BC4EFE03}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>EmbelmonLib</RootNamespace>
-    <AssemblyName>EmbelmonLib</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>EmblemonLib</RootNamespace>
+    <AssemblyName>EmblemonLib</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,9 +30,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyClass.cs" />
+    <Compile Include="Data\Armour.cs" />
+    <Compile Include="Data\Weapon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Combat\CharacterStats.cs" />
     <Compile Include="Combat\Effectiveness.cs" />
@@ -39,17 +42,20 @@
     <Compile Include="Combat\LevelingCurve.cs" />
     <Compile Include="Combat\Move.cs" />
     <Compile Include="Combat\Party.cs" />
-    <Compile Include="Combat\PhysicalMove.cs" />
-    <Compile Include="Combat\Spell.cs" />
     <Compile Include="Combat\TurnBasedBattle.cs" />
-    <Compile Include="Data\Enemy.cs" />
-    <Compile Include="Data\NonPlayerCharacter.cs" />
-    <Compile Include="Data\PlayerCharacter.cs" />
+    <Compile Include="Data\OverworldCharacter.cs" />
+    <Compile Include="Data\BattleCharacter.cs" />
+    <Compile Include="Data\HybridCharacter.cs" />
     <Compile Include="Interfaces\Character.cs" />
     <Compile Include="Interfaces\Combatable.cs" />
     <Compile Include="Utilities\Animation.cs" />
     <Compile Include="Utilities\AnimationRule.cs" />
+    <Compile Include="Interfaces\Factory.cs" />
+    <Compile Include="Utilities\MoveFactory.cs" />
     <Compile Include="Utilities\ParticleEffect.cs" />
+    <Compile Include="Utilities\BattleCharacterFactory.cs" />
+    <Compile Include="Utilities\HybridCharacterFactory.cs" />
+    <Compile Include="Utilities\OverworldCharacterFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\lib\FNA\FNA.csproj">
