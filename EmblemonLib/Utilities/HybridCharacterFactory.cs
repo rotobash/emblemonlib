@@ -115,6 +115,7 @@ namespace EmblemonLib.Utilities
 
 			stats.LoadStats (health, magic, stamina, level, strength, defense, power, fortitude, speed);
 
+
             //Animations
             node = charXml["BattleAnimations"];
             foreach(XmlNode subnode in node.ChildNodes)

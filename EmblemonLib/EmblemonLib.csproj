@@ -55,6 +55,9 @@
     <Compile Include="Utilities\BattleCharacterFactory.cs" />
     <Compile Include="Utilities\HybridCharacterFactory.cs" />
     <Compile Include="Utilities\OverworldCharacterFactory.cs" />
+    <Compile Include="Utilities\SceneManager.cs" />
+    <Compile Include="Interfaces\Scene.cs" />
+    <Compile Include="Utilities\MapFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\lib\FNA\FNA.csproj">

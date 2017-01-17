@@ -1,6 +1,19 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="EmblemonLib/Utilities/SceneManager.cs">
+    <Files>
+      <File FileName="EmblemonLib/Combat/StatusEffect.cs" Line="8" Column="3" />
+      <File FileName="EmblemonLib/Interfaces/Combatable.cs" Line="191" Column="56" />
+      <File FileName="EmblemonLib/Combat/Move.cs" Line="23" Column="16" />
+      <File FileName="EmblemonLib/Combat/CharacterStats.cs" Line="43" Column="27" />
+      <File FileName="EmblemonLib/Utilities/MoveFactory.cs" Line="22" Column="12" />
+      <File FileName="EmblemonLib/Utilities/OverworldCharacterFactory.cs" Line="1" Column="1" />
+      <File FileName="EmblemonLib/Utilities/HybridCharacterFactory.cs" Line="117" Column="4" />
+      <File FileName="EmblemonLib/Utilities/SceneManager.cs" Line="8" Column="30" />
+      <File FileName="EmblemonLib/Interfaces/Scene.cs" Line="15" Column="33" />
+      <File FileName="EmblemonLib/Utilities/MapFactory.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
