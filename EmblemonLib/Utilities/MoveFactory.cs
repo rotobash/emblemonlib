@@ -18,7 +18,8 @@ namespace EmblemonLib.Utilities
             XmlNode moveXml = moveDoc["Move"];
 
             string name = moveXml["Name"].InnerText;
-            int power = int.Parse(moveXml["Power"].InnerText);
+			int power = int.Parse(moveXml["Power"].InnerText);
+			int cost = int.Parse(moveXml["Cost"].InnerText);
             float inflictChance = float.Parse(moveXml["StatusInfliction"].Attributes[0].InnerText);
 
             Target target;
@@ -106,7 +107,7 @@ namespace EmblemonLib.Utilities
             Point tempPoint = new Point(int.Parse(parsedPoint[0]), int.Parse(parsedPoint[1]));
             overlay = new Animation(cm.Load<Texture2D>(node["Texture"].InnerText), tempPoint);
 
-            return new Move(name, power, inflictChance, target, method, infliction, effect, overlay);
+			return new Move(name, power, cost, inflictChance, target, method, infliction, effect, overlay);
         }
     }
 }

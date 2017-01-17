@@ -13,19 +13,14 @@ namespace EmblemonLib.Combat
 
     public class Move
 	{
-        float inflictChance;
-
-        Target target;
-        Method method;
-        StatusInfliction infliction;
-        Effect effect;
-
         Animation overlay;
 
-        public Move (string name, int power, float inflictChance, Target target, Method method, StatusInfliction infliction, Effect effect, Animation animation)
+		public Move (string name, int power, int cost, float inflictChance, Target target, Method method, 
+			StatusInfliction infliction, Effect effect, Animation animation)
         {
             Name = name;
             Power = power;
+			Cost = cost;
             InflictChance = inflictChance;
             Target = target;
             Method = method;
@@ -45,6 +40,11 @@ namespace EmblemonLib.Combat
             get;
             private set;
         }
+
+		public int Cost {
+			get;
+			private set;
+		}
 
         public float InflictChance
         {

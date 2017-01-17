@@ -10,9 +10,12 @@ namespace EmblemonLib.Interfaces
 {
     public abstract class Combatable
     {
+		Random rand;
+
         Dictionary<string, Animation> battleAnimations;
         Animation currentAnimation;
 
+		StatusInfliction currentInfliction = StatusInfliction.None;
         CharacterStats stats;
         Move currentMove;
 
@@ -24,9 +27,15 @@ namespace EmblemonLib.Interfaces
 
         public Combatable(CharacterStats stats, Dictionary<string, Animation> battleAnimations, LevelingCurve levelCurve, Dictionary<string, LevelingCurve> attrCurves, Dictionary<string, Move> moves)
         {
+			rand = new Random ();
+
             this.stats = stats;
             this.battleAnimations = battleAnimations;
             this.moves = moves;
+
+			CurrentHealth = MaxHealth;
+			CurrentMagic = MaxMagic;
+			CurrentStamina = MaxStamina;
 
             IsAttacking = false;
             WantsToAttack = false;
@@ -39,9 +48,15 @@ namespace EmblemonLib.Interfaces
             private set;
         }
 
+		public int CurrentHealth { get; private set; }
+		public int CurrentStamina { get; private set; }
+		public int CurrentMagic { get; private set; }
+
+
         //Read-Only Stats
-        public int Health { get { return stats.Health; } }
-        public int Magic { get { return stats.Magic; } }
+        public int MaxHealth { get { return stats.Health; } }
+		public int MaxMagic { get { return stats.Magic; } }
+		public int MaxStamina { get { return stats.Stamina; } }
 
         public int Level { get { return stats.Level; } }
 
@@ -140,30 +155,68 @@ namespace EmblemonLib.Interfaces
             currentAnimation.Draw(spritebatch);
         }
 
-        public int CalculateDamage(Move attack)
+        public bool ApplyMove(Combatable movePerformer, Move attack)
         {
-            //TODO: base damage on move and other stats
-            return Strength;
-        }
-        public int CalculateDefense(Move attack)
-        {
-            //TODO: base defense on move and other stats
-            return Defense;
-        }
+			if (attack.Effect == Combat.Effect.Damaging) {
+				//TODO: calculate run chance
+				if (Speed > movePerformer.Speed && rand.Next (10) < 5)
+					return false;
+				if (attack.Method == Method.Physical) {
+					//TODO: calculate physical attack formula
+					int damage = (movePerformer.Strength * attack.Power) - Defense;
+					CurrentHealth = damage > 0 ? CurrentHealth - damage : CurrentHealth;
+					CurrentHealth = CurrentHealth < 0 ? 0 : CurrentHealth;
+				} else {
+					//TODO: calculate physical attack formula
+					int damage = (movePerformer.Power * attack.Power) - Fortitude;
+					CurrentHealth = damage > 0 ? CurrentHealth - damage : CurrentHealth;
+					CurrentHealth = CurrentHealth < 0 ? 0 : CurrentHealth;
+				}
+			} else if (attack.Effect == EmblemonLib.Combat.Effect.Curative) {
+				if (attack.Method == Method.Physical) {
+					//TODO: calculate physical heal formula
+					int heal = (movePerformer.Strength * attack.Power);
+					CurrentHealth += heal;
+					CurrentHealth = CurrentHealth > MaxHealth ? MaxHealth : CurrentHealth;
+				} else {
+					//TODO: calculate special heal formula
+					int heal = (movePerformer.Power * attack.Power);
+					CurrentHealth += heal;
+					CurrentHealth = CurrentHealth > MaxHealth ? MaxHealth : CurrentHealth;
+				}
+			} 
+			return true;
+		}
 
-        public bool ApplyEffect(Effects effect)
-        {
-            bool wasApplied = false;
+		//This shouldn't be here but in the main battle class
+		public List<bool> ApplyMove(List<Combatable> targets, Move attack) {
+			List<bool> successes = new List<bool> ();
+			foreach (Combatable target in targets) {
+				successes.Add (target.ApplyMove (this, attack));
+			}
+			return successes;
+		}
 
-            switch (effect)
-            {
-                case Effects.Confused:
-                    //do some chance stuff here
-                    //see if effect is applied
-                    wasApplied = true;
-                    break;
-            }
-            return wasApplied;
+		public bool CanPerformMove(Move attack) {
+			if (attack.Method == Method.Physical) {
+				if(CurrentStamina > attack.Cost) {
+					CurrentStamina -= attack.Cost;
+					return true;
+				}
+				return false;
+				
+			} else {
+				if (CurrentMagic > attack.Cost) {
+					CurrentMagic -= attack.Cost;
+					return true;
+				}
+				return false;
+			}
+		}
+
+		public void ApplyEffect(StatusInfliction effect)
+        {
+			currentInfliction = effect;
         }
     }
 }

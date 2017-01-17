@@ -23,6 +23,7 @@ namespace EmblemonLib.Combat
 
         int health;
 		int magic;
+		int stamina;
         int experienceNeeded;
         int experienceTotal;
 
@@ -34,11 +35,12 @@ namespace EmblemonLib.Combat
 		int fortitude;
 		int speed;
 
-		public void LoadStats(int health, int magic, int level, int strength, int defense,
+		public void LoadStats(int health, int magic, int stamina, int level, int strength, int defense,
 			int power, int fortitude, int speed) {
 
 			this.health = health;
 			this.magic = magic;
+			this.stamina = stamina;
 
 			this.level = level;
 
@@ -52,7 +54,8 @@ namespace EmblemonLib.Combat
         public void LevelUp(Dictionary<string, LevelingCurve> levelingCurves)
         {
             health = (int)levelingCurves["Health"].GetExperienceForNextLevel(level);
-            magic = (int)levelingCurves["Magic"].GetExperienceForNextLevel(level);
+			magic = (int)levelingCurves["Magic"].GetExperienceForNextLevel(level);
+			stamina = (int)levelingCurves["Stamina"].GetExperienceForNextLevel(level);
             strength = (int)levelingCurves["Strength"].GetExperienceForNextLevel(level);
             defense = (int)levelingCurves["Defense"].GetExperienceForNextLevel(level);
             power = (int)levelingCurves["Power"].GetExperienceForNextLevel(level);
@@ -66,6 +69,9 @@ namespace EmblemonLib.Combat
 		}
 		public int Magic {
 			get { return magic; }
+		}
+		public int Stamina {
+			get { return stamina; }
 		}
 
 		public int Level {

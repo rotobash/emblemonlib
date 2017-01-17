@@ -28,7 +28,7 @@ namespace EmblemonLib.Utilities
 
             Dictionary<string, Animation> battleAnimations = new Dictionary<string, Animation>();
 
-            int health, magic, level, strength, defense, power, fortitude, speed;
+            int health, magic, stamina, level, strength, defense, power, fortitude, speed;
             int statParseSucess = 0;
 
 
@@ -99,7 +99,8 @@ namespace EmblemonLib.Utilities
             //STATS
             node = charXml["CharacterStats"];
             statParseSucess = int.TryParse(node["Health"].InnerText, out health) ? ++statParseSucess : statParseSucess;
-            statParseSucess = int.TryParse(node["Magic"].InnerText, out magic) ? ++statParseSucess : statParseSucess;
+			statParseSucess = int.TryParse(node["Magic"].InnerText, out magic) ? ++statParseSucess : statParseSucess;
+			statParseSucess = int.TryParse(node["Magic"].InnerText, out stamina) ? ++statParseSucess : statParseSucess;
             statParseSucess = int.TryParse(node["Level"].InnerText, out level) ? ++statParseSucess : statParseSucess;
 
             statParseSucess = int.TryParse(node["Strength"].InnerText, out strength) ? ++statParseSucess : statParseSucess;
@@ -111,6 +112,8 @@ namespace EmblemonLib.Utilities
 
             if (statParseSucess != CharacterStats.STATNUMBER)
                 throw new FormatException("All stats were not parsed successfully");
+
+			stats.LoadStats (health, magic, stamina, level, strength, defense, power, fortitude, speed);
 
             //Animations
             node = charXml["BattleAnimations"];
