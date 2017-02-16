@@ -33,6 +33,8 @@ namespace EmblemonLib.Interfaces
             this.battleAnimations = battleAnimations;
             this.moves = moves;
 
+            currentAnimation = battleAnimations["idle"];
+
 			CurrentHealth = MaxHealth;
 			CurrentMagic = MaxMagic;
 			CurrentStamina = MaxStamina;

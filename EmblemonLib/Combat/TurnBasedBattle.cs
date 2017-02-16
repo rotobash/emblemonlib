@@ -51,7 +51,7 @@ namespace EmblemonLib.Combat
 
 		public void SetPlayerSelection(int selection) {
 			playerMoveSelection = selection;
-			playerOnField.MakeMoveSelection ("move1");
+			playerOnField.MakeMoveSelection ("Heal");
 		}
 
 		void SelectionPhase() {
@@ -59,7 +59,7 @@ namespace EmblemonLib.Combat
 				playerOnField.IsSelecting = false;
 				playerOnField.WantsToAttack = true;
 				phase = BattlePhase.Attacking;
-				enemyOnField.MakeMoveSelection ("move1");
+				enemyOnField.MakeMoveSelection ("Heal");
 			}
 		}
 

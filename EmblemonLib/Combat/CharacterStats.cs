@@ -19,7 +19,7 @@ namespace EmblemonLib.Combat
 	/// </summary>
 	public class CharacterStats
     {
-        public const int STATNUMBER = 8;
+        public const int STATNUMBER = 9;
 
         int health;
 		int magic;

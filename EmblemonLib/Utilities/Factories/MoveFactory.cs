@@ -9,9 +9,19 @@ using Microsoft.Xna.Framework;
 
 namespace EmblemonLib.Utilities
 {
-    public static class MoveFactory
+    public class MoveFactory
     {
-        public static Move Build(string path, ContentManager cm)
+        static MoveFactory instance = new MoveFactory();
+
+        public static MoveFactory GetInstance
+        {
+            get
+            {
+                return instance;
+            }
+        }
+
+        public Move BuildMove(string path, ContentManager cm)
         {
             XmlDocument moveDoc = new XmlDocument();
             moveDoc.Load(path);
