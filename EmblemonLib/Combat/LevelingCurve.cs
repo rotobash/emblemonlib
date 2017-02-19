@@ -31,34 +31,90 @@ namespace EmblemonLib.Combat
 			this.yOffset = yOffset;
 		}
 
-		/// <summary>
-		/// Given a level, calculate the 
-		/// </summary>
-		/// <returns>The experience for next level.</returns>
-		/// <param name="level">Level.</param>
-		public double GetExperienceForNextLevel(int level) 
+        public FunctionType Function
+        {
+            get
+            {
+                return function;
+            }
+        }
+
+        public double Power
+        {
+            get
+            {
+                return power;
+            }
+        }
+
+        public double XOffset
+        {
+            get
+            {
+                return xOffset;
+            }
+        }
+
+        public double XSkew
+        {
+            get
+            {
+                return xSkew;
+            }
+        }
+
+        public double YOffset
+        {
+            get
+            {
+                return yOffset;
+            }
+        }
+
+        public double YSkew
+        {
+            get
+            {
+                return ySkew;
+            }
+        }
+
+        /// <summary>
+        /// Given a level, calculate the 
+        /// </summary>
+        /// <returns>The experience for next level.</returns>
+        /// <param name="level">Level.</param>
+        public double GetExperienceForNextLevel(int level) 
 		{
 			double functionAtX;
+            if (ySkew == 0)
+                return yOffset;
+
 			switch(function) 
 			{
 				case FunctionType.Linear:
-					functionAtX = (xSkew * (level + xOffset));
+					functionAtX = ( (xSkew/ySkew) * level + yOffset);
 					break;
 				case FunctionType.Logarithmic:
-					functionAtX = Math.Log (xSkew * (level + xOffset), power);
+					functionAtX = Math.Log ((xSkew / ySkew) * level, power) + yOffset;
 					break;
 				case FunctionType.Polynomial:
-					functionAtX = Math.Pow(xSkew * (level + xOffset), power);
+					functionAtX = Math.Pow((xSkew / ySkew) * level, power) + yOffset;
 					break;
 				case FunctionType.Exponential:
-					functionAtX = Math.Pow(power, xSkew * (level + xOffset));
+					functionAtX = Math.Pow(power, (xSkew / ySkew) * level) + yOffset;
 					break;
 				default:
 					functionAtX = 0;
 					break;
 			}
-			return ySkew * (functionAtX + yOffset);
+			return functionAtX;
 		}
+
+        public string Parse()
+        {
+            return "";
+        }
 	}
 }
 

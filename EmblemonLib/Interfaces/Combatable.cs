@@ -44,29 +44,29 @@ namespace EmblemonLib.Interfaces
             IsSelecting = false;
         }
 
-        public int Experience
+        public double Experience
         {
             get;
             private set;
         }
 
-		public int CurrentHealth { get; private set; }
-		public int CurrentStamina { get; private set; }
-		public int CurrentMagic { get; private set; }
+		public double CurrentHealth { get; private set; }
+		public double CurrentStamina { get; private set; }
+		public double CurrentMagic { get; private set; }
 
 
         //Read-Only Stats
-        public int MaxHealth { get { return stats.Health; } }
-		public int MaxMagic { get { return stats.Magic; } }
-		public int MaxStamina { get { return stats.Stamina; } }
+        public double MaxHealth { get { return stats.Health; } }
+		public double MaxMagic { get { return stats.Magic; } }
+		public double MaxStamina { get { return stats.Stamina; } }
 
         public int Level { get { return stats.Level; } }
 
-        public int Strength { get { return stats.Strength; } }
-        public int Defense { get { return stats.Defense; } }
-        public int Power { get { return stats.Power; } }
-        public int Fortitude { get { return stats.Fortitude; } }
-        public int Speed { get { return stats.Speed; } }
+        public double Strength { get { return stats.Strength; } }
+        public double Defense { get { return stats.Defense; } }
+        public double Power { get { return stats.Power; } }
+        public double Fortitude { get { return stats.Fortitude; } }
+        public double Speed { get { return stats.Speed; } }
 
         public Vector2 Location
         {
@@ -84,9 +84,9 @@ namespace EmblemonLib.Interfaces
         public bool AddExperience(int XP)
         {
             Experience += XP;
-            if (Experience >= (int)levelCurve.GetExperienceForNextLevel(Level))
+            if (Experience >= levelCurve.GetExperienceForNextLevel(Level))
             {
-                Experience -= (int)levelCurve.GetExperienceForNextLevel(Level);
+                Experience -= levelCurve.GetExperienceForNextLevel(Level);
                 stats.LevelUp(attributeCurves);
                 return true;
             }
@@ -165,24 +165,24 @@ namespace EmblemonLib.Interfaces
 					return false;
 				if (attack.Method == Method.Physical) {
 					//TODO: calculate physical attack formula
-					int damage = (movePerformer.Strength * attack.Power) - Defense;
+					double damage = (movePerformer.Strength * attack.Power) - Defense;
 					CurrentHealth = damage > 0 ? CurrentHealth - damage : CurrentHealth;
 					CurrentHealth = CurrentHealth < 0 ? 0 : CurrentHealth;
 				} else {
 					//TODO: calculate physical attack formula
-					int damage = (movePerformer.Power * attack.Power) - Fortitude;
+					double damage = (movePerformer.Power * attack.Power) - Fortitude;
 					CurrentHealth = damage > 0 ? CurrentHealth - damage : CurrentHealth;
 					CurrentHealth = CurrentHealth < 0 ? 0 : CurrentHealth;
 				}
-			} else if (attack.Effect == EmblemonLib.Combat.Effect.Curative) {
+			} else if (attack.Effect == Combat.Effect.Curative) {
 				if (attack.Method == Method.Physical) {
 					//TODO: calculate physical heal formula
-					int heal = (movePerformer.Strength * attack.Power);
+					double heal = (movePerformer.Strength * attack.Power);
 					CurrentHealth += heal;
 					CurrentHealth = CurrentHealth > MaxHealth ? MaxHealth : CurrentHealth;
 				} else {
 					//TODO: calculate special heal formula
-					int heal = (movePerformer.Power * attack.Power);
+					double heal = (movePerformer.Power * attack.Power);
 					CurrentHealth += heal;
 					CurrentHealth = CurrentHealth > MaxHealth ? MaxHealth : CurrentHealth;
 				}

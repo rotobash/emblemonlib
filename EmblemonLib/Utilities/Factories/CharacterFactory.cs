@@ -116,7 +116,7 @@ namespace EmblemonLib.Utilities
 
             statParseSucess = int.TryParse(node["Health"].InnerText, out health) ? ++statParseSucess : statParseSucess;
             statParseSucess = int.TryParse(node["Magic"].InnerText, out magic) ? ++statParseSucess : statParseSucess;
-            statParseSucess = int.TryParse(node["Magic"].InnerText, out stamina) ? ++statParseSucess : statParseSucess;
+            statParseSucess = int.TryParse(node["Stamina"].InnerText, out stamina) ? ++statParseSucess : statParseSucess;
             statParseSucess = int.TryParse(node["Level"].InnerText, out level) ? ++statParseSucess : statParseSucess;
 
             statParseSucess = int.TryParse(node["Strength"].InnerText, out strength) ? ++statParseSucess : statParseSucess;
@@ -181,6 +181,7 @@ namespace EmblemonLib.Utilities
             tempPoint = new Point(int.Parse(parsedPoint[0]), int.Parse(parsedPoint[1]));
             return new Animation(cm.Load<Texture2D>(node["Texture"].InnerText), tempPoint);
         }
+
         Dictionary<string, Animation> LoadAnimations(XmlNode node, ContentManager cm)
         {
             Dictionary<string, Animation> animations = new Dictionary<string, Animation>();
@@ -196,7 +197,7 @@ namespace EmblemonLib.Utilities
             foreach (string move in moveList)
             {
                 string movePath = "Content/Moves/" + move + ".xml";
-                moves.Add(move, MoveFactory.GetInstance.BuildMove(movePath, cm));
+                moves.Add(move, MoveFactory.GetInstance.GetOrLoadMove(movePath, cm));
             }
 
             return moves;

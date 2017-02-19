@@ -21,19 +21,19 @@ namespace EmblemonLib.Combat
     {
         public const int STATNUMBER = 9;
 
-        int health;
-		int magic;
-		int stamina;
-        int experienceNeeded;
-        int experienceTotal;
+        double health;
+        double magic;
+        double stamina;
+        double experienceNeeded;
+        double experienceTotal;
 
         int level;
 
-		int strength;
-		int defense;
-		int power;
-		int fortitude;
-		int speed;
+        double strength;
+        double defense;
+        double power;
+        double fortitude;
+        double speed;
 
 		public void LoadStats(int health, int magic, int stamina, int level, int strength, int defense,
 			int power, int fortitude, int speed) {
@@ -53,24 +53,24 @@ namespace EmblemonLib.Combat
 
         public void LevelUp(Dictionary<string, LevelingCurve> levelingCurves)
         {
-            health = (int)levelingCurves["Health"].GetExperienceForNextLevel(level);
-			magic = (int)levelingCurves["Magic"].GetExperienceForNextLevel(level);
-			stamina = (int)levelingCurves["Stamina"].GetExperienceForNextLevel(level);
-            strength = (int)levelingCurves["Strength"].GetExperienceForNextLevel(level);
-            defense = (int)levelingCurves["Defense"].GetExperienceForNextLevel(level);
-            power = (int)levelingCurves["Power"].GetExperienceForNextLevel(level);
-            fortitude = (int)levelingCurves["Fortitude"].GetExperienceForNextLevel(level);
-            speed = (int)levelingCurves["Speed"].GetExperienceForNextLevel(level);
+            health = levelingCurves["Health"].GetExperienceForNextLevel(level);
+			magic = levelingCurves["Magic"].GetExperienceForNextLevel(level);
+			stamina = levelingCurves["Stamina"].GetExperienceForNextLevel(level);
+            strength = levelingCurves["Strength"].GetExperienceForNextLevel(level);
+            defense = levelingCurves["Defense"].GetExperienceForNextLevel(level);
+            power = levelingCurves["Power"].GetExperienceForNextLevel(level);
+            fortitude = levelingCurves["Fortitude"].GetExperienceForNextLevel(level);
+            speed = levelingCurves["Speed"].GetExperienceForNextLevel(level);
             level++;
         }
 
-		public int Health {
+		public double Health {
 			get { return health; }
 		}
-		public int Magic {
+		public double Magic {
 			get { return magic; }
 		}
-		public int Stamina {
+		public double Stamina {
 			get { return stamina; }
 		}
 
@@ -78,19 +78,19 @@ namespace EmblemonLib.Combat
 			get { return level; }
 		}
 
-		public int Strength {
+		public double Strength {
 			get { return strength; }
 		}
-		public int Defense {
+		public double Defense {
 			get { return defense; }
 		}
-		public int Power {
+		public double Power {
 			get { return power; }
 		}
-		public int Fortitude {
+		public double Fortitude {
 			get { return fortitude; }
 		}
-		public int Speed {
+		public double Speed {
 			get { return speed; }
 		}
 	}
