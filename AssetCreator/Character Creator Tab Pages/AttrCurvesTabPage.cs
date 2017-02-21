@@ -16,148 +16,44 @@ using EmblemonLib.Combat;
 
 namespace AssetCreator
 {
-    /// <summary>
-    /// Logic for the Attribute Curves Tab Page
-    /// 
-    /// TODO:
-    /// Save/Load Curves from files
-    /// </summary>
+    public struct CurveData
+    {
+        public FunctionType type;
+        public double power, xSkew, ySkew, xOffset, yOffset;
+    }
+
     public partial class CharacterCreator : Form
     {
-        Dictionary<string, LevelingCurve> attrCurves;
-        LevelingCurve levelCurve;
-        int previousAttrCurveIndex = -1;
+        Dictionary<string, CurveData> attrCurves;
+        CurveData curve;
+        string key;
+
+        string[] curves = { "", "Level Curve", "Health Curve", "Magic Curve", "Stamina Curve", "Speed Curve",
+            "Strength Curve", "Defense Curve" , "Power Curve", "Fortitude Curve" };
 
         void LoadAttrCurveTab()
         {
-            attrCurves = new Dictionary<string, LevelingCurve>()
-            {
-                { "Attribute Curve", new LevelingCurve(FunctionType.Linear, 1, 1, 1, 0, 0) }
+            attrCurves = new Dictionary<string, CurveData>() {
+                { "Attribute Curve", new CurveData() { power = 1, xSkew = 1, ySkew = 1, type = FunctionType.Linear } }
             };
-            levelCurve = new LevelingCurve(FunctionType.Linear, 1, 1, 1, 0, 0);
-
-            currentAttrCurveDropDown.SelectedText = "Attribute Curve";
-            currentAttrCurveDropDown.SelectedIndex = 0;
-            attrCurveFnComboBox.SelectedIndex = 0;
-            lvlCurveFnComboBox.SelectedIndex = 0;
+            
+            foreach(string curveStr in curves)
+                attrCurves.Add(curveStr, new CurveData() { power = 1, xSkew = 1, ySkew = 1, type = FunctionType.Linear });
+            
+            key = "Attribute Curve";
+            curve = attrCurves[key];
             singleCurveRadioBtn.Checked = true;
-
-            FillInFields("Level Curve", false);
-            FillInFields("Attribute Curve", true);
+            currentAttrCurveDropDown.SelectedIndex = 0;
         }
 
-        void LoadAttrCurveTabFromFile(string path)
+        void FillInFields()
         {
-            attrCurves = new Dictionary<string, LevelingCurve>()
-            {
-                { "Attribute ", new LevelingCurve(FunctionType.Linear, 1, 1, 1, 0, 0) }
-            };
-            levelCurve = new LevelingCurve(FunctionType.Linear, 1, 1, 1, 0, 0);
-        }
-
-        void FillInFields(string curveName, bool isAttrCurve)
-        {
-            string type;
-            LevelingCurve curve;
-
-            if (!attrCurves.ContainsKey(curveName) || levelCurve == null)
-            {
-                curve = new LevelingCurve(FunctionType.Linear, 1, 1, 1, 0, 0);
-                if (isAttrCurve)
-                    attrCurves.Add(curveName, curve);
-                else
-                    levelCurve = curve;
-            }
-            else
-                curve = (isAttrCurve ? attrCurves[curveName] : levelCurve);
-
-            switch (curve.Function)
-            {
-                case FunctionType.Polynomial:
-                    type = "Polynomial";
-                    break;
-                case FunctionType.Exponential:
-                    type = "Exponential";
-                    break;
-                case FunctionType.Logarithmic:
-                    type = "Logarithmic";
-                    break;
-                default:
-                    type =  "Linear";
-                    break;
-            }
-            if (isAttrCurve)
-            {
-                attrCurveFnComboBox.SelectedText = "";
-                attrCurveFnComboBox.SelectedText = type;
-                attrCurvePwrNumBox.Value = (decimal)curve.Power;
-                attrCurveXSkewNumBox.Value = (decimal)curve.XSkew;
-                attrCurveYSkewNumBox.Value = (decimal)curve.YSkew;
-                attrCurveXOffNumBox.Value = (decimal)curve.XOffset;
-                attrCurveYOffNumBox.Value = (decimal)curve.YOffset;
-            }
-            else
-            {
-                attrCurveFnComboBox.SelectedText = "";
-                lvlCurveFnComboBox.SelectedText = type;
-                lvlCurvePwrNumBox.Value = (decimal)curve.Power;
-                lvlCurveXSkewNumBox.Value = (decimal)curve.XSkew;
-                lvlCurveYSkewNumBox.Value = (decimal)curve.YSkew;
-                lvlCurveXOffNumBox.Value = (decimal)curve.XOffset;
-                lvlCurveYOffNumBox.Value = (decimal)curve.YOffset;
-            }
-        }
-
-        void UpdateLevelCurve(string curveName, bool isAttrCurve)
-        {
-            string selectedType;
-            FunctionType type;
-            double functionPower, xSkew, ySkew, xOffset, yOffset;
-            selectedType = curveName == "Level Curve" ? lvlCurveFnComboBox.GetItemText(lvlCurveFnComboBox.SelectedItem) 
-                : attrCurveFnComboBox.GetItemText(attrCurveFnComboBox.SelectedItem);
-
-            switch (selectedType)
-            {
-                case "Polynomial":
-                    type = FunctionType.Polynomial;
-                    break;
-                case "Exponential":
-                    type = FunctionType.Exponential;
-                    break;
-                case "Logarithmic":
-                    type = FunctionType.Logarithmic;
-                    break;
-                default:
-                    type = FunctionType.Linear;
-                    break;
-            }
-
-            if (!isAttrCurve)
-            {
-                functionPower = (double)lvlCurvePwrNumBox.Value;
-                xSkew = (double)lvlCurveXSkewNumBox.Value;
-                ySkew = (double)lvlCurveYSkewNumBox.Value;
-                xOffset = (double)lvlCurveXOffNumBox.Value;
-                yOffset = (double)lvlCurveYOffNumBox.Value;
-                levelCurve = new LevelingCurve(type, functionPower, xSkew, ySkew, xOffset, yOffset);
-                DrawCurve(lvlCurvePicBox, levelCurve);
-            }
-            else
-            {
-                functionPower = (double)attrCurvePwrNumBox.Value;
-                xSkew = (double)attrCurveXSkewNumBox.Value;
-                ySkew = (double)attrCurveYSkewNumBox.Value;
-                xOffset = (double)attrCurveXOffNumBox.Value;
-                yOffset = (double)attrCurveYOffNumBox.Value;
-                LevelingCurve attrCurve = new LevelingCurve(type, functionPower, xSkew, ySkew, xOffset, yOffset);
-
-                if (attrCurves.ContainsKey(curveName))
-                    attrCurves[curveName] = attrCurve;
-                else
-                    attrCurves.Add(curveName, attrCurve);
-
-                DrawCurve(attrCurvePicBox, attrCurve);
-            }
+            attrCurveFnComboBox.SelectedIndex = attrCurveFnComboBox.Items.IndexOf(curve.type.ToString());
+            attrCurvePwrNumBox.Value = (decimal)curve.power;
+            attrCurveXSkewNumBox.Value = (decimal)curve.xSkew;
+            attrCurveYSkewNumBox.Value = (decimal)curve.ySkew;
+            attrCurveXOffNumBox.Value = (decimal)curve.xOffset;
+            attrCurveYOffNumBox.Value = (decimal)curve.yOffset;
         }
 
         void DrawCurve(PictureBox target, LevelingCurve curve, int originOffset=30, int xScale=3, int yScale=2)
@@ -221,133 +117,49 @@ namespace AssetCreator
             targetPictureBox.Invalidate();
         }
 
-        LevelingCurve LoadCurve(XmlNode node)
-        {
-            FunctionType type;
-            double functionPower, xSkew, ySkew, xOffset, yOffset;
-
-            switch (node["Type"].InnerText)
-            {
-                case "Polynomial":
-                    type = FunctionType.Polynomial;
-                    break;
-                case "Exponential":
-                    type = FunctionType.Exponential;
-                    break;
-                case "Logarithmic":
-                    type = FunctionType.Logarithmic;
-                    break;
-                default:
-                    type = FunctionType.Linear;
-                    break;
-            }
-            functionPower = double.Parse(node["Power"].InnerText);
-            xSkew = double.Parse(node["xSkew"].InnerText);
-            ySkew = double.Parse(node["ySkew"].InnerText);
-            xOffset = double.Parse(node["xOffset"].InnerText);
-            yOffset = double.Parse(node["yOffset"].InnerText);
-            return new LevelingCurve(type, functionPower, xSkew, ySkew, xOffset, yOffset);
-        }
-
-        private void saveAllBtn_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void saveLvlCurveBtn_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void saveAttrCurve_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void loadAllFromFileBtn_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void loadLvlCurveBttn_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void loadAttrCurveBttn_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lvlCurveFnComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            UpdateLevelCurve("Level Curve", false);
-        }
-
-        private void lvlCurvePwrNumBox_ValueChanged(object sender, EventArgs e)
-        {
-            UpdateLevelCurve("Level Curve", false);
-        }
-
-        private void lvlCurveXSkewNumBox_ValueChanged(object sender, EventArgs e)
-        {
-            UpdateLevelCurve("Level Curve", false);
-        }
-
-        private void lvlCurveYSkewNumBox_ValueChanged(object sender, EventArgs e)
-        {
-            UpdateLevelCurve("Level Curve", false);
-        }
-
-        private void lvlCurveXOffNumBox_ValueChanged(object sender, EventArgs e)
-        {
-            UpdateLevelCurve("Level Curve", false);
-        }
-
-        private void lvlCurveYOffNumBox_ValueChanged(object sender, EventArgs e)
-        {
-            UpdateLevelCurve("Level Curve", false);
-        }
-
         private void currentAttrCurveDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(previousAttrCurveIndex > -1)
-            {
-                object prevObj = currentAttrCurveDropDown.Items[previousAttrCurveIndex];
-                UpdateLevelCurve(currentAttrCurveDropDown.GetItemText(prevObj), true);
-            }
-            FillInFields(currentAttrCurveDropDown.GetItemText(currentAttrCurveDropDown.SelectedItem), true);
-            previousAttrCurveIndex = currentAttrCurveDropDown.SelectedIndex;
+            attrCurves[key] = curve;
+            key = currentAttrCurveDropDown.GetItemText(currentAttrCurveDropDown.SelectedItem);
+            curve = attrCurves[key];
+            FillInFields();
         }
 
         private void attrCurveFnComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateLevelCurve(currentAttrCurveDropDown.SelectedText, true);
+            string selectedType = attrCurveFnComboBox.GetItemText(attrCurveFnComboBox.SelectedItem);
+            curve.type = (FunctionType)Enum.Parse(typeof(FunctionType), selectedType);
+            DrawCurve(attrCurvePicBox, new LevelingCurve(curve.type, curve.power, curve.xSkew, curve.ySkew, curve.xOffset, curve.yOffset));
         }
 
         private void attrCurvePwrNumBox_ValueChanged(object sender, EventArgs e)
         {
-            UpdateLevelCurve(currentAttrCurveDropDown.SelectedText, true);
+            curve.power = (double)attrCurvePwrNumBox.Value;
+            DrawCurve(attrCurvePicBox, new LevelingCurve(curve.type, curve.power, curve.xSkew, curve.ySkew, curve.xOffset, curve.yOffset));
         }
 
         private void attrCurveXSkewNumBox_ValueChanged(object sender, EventArgs e)
         {
-            UpdateLevelCurve(currentAttrCurveDropDown.SelectedText, true);
+            curve.xSkew = (double)attrCurveXSkewNumBox.Value;
+            DrawCurve(attrCurvePicBox, new LevelingCurve(curve.type, curve.power, curve.xSkew, curve.ySkew, curve.xOffset, curve.yOffset));
         }
 
         private void attrCurveYSkewNumBox_ValueChanged(object sender, EventArgs e)
         {
-            UpdateLevelCurve(currentAttrCurveDropDown.SelectedText, true);
+            curve.ySkew = (double)attrCurveYSkewNumBox.Value;
+            DrawCurve(attrCurvePicBox, new LevelingCurve(curve.type, curve.power, curve.xSkew, curve.ySkew, curve.xOffset, curve.yOffset));
         }
 
         private void attrCurveXOffNumBox_ValueChanged(object sender, EventArgs e)
         {
-            UpdateLevelCurve(currentAttrCurveDropDown.SelectedText, true);
+            curve.xOffset = (double)attrCurveXOffNumBox.Value;
+            DrawCurve(attrCurvePicBox, new LevelingCurve(curve.type, curve.power, curve.xSkew, curve.ySkew, curve.xOffset, curve.yOffset));
         }
 
         private void attrCurveYOffNumBox_ValueChanged(object sender, EventArgs e)
         {
-            UpdateLevelCurve(currentAttrCurveDropDown.SelectedText, true);
+            curve.yOffset = (double)attrCurveYOffNumBox.Value;
+            DrawCurve(attrCurvePicBox, new LevelingCurve(curve.type, curve.power, curve.xSkew, curve.ySkew, curve.xOffset, curve.yOffset));
         }
 
 
@@ -355,15 +167,13 @@ namespace AssetCreator
         {
             currentAttrCurveDropDown.Items.Clear();
             currentAttrCurveDropDown.Items.Add("Attribute Curve");
-            currentAttrCurveDropDown.SelectedText = "Attribute Curve";
             currentAttrCurveDropDown.SelectedIndex = 0;
-            previousAttrCurveIndex = -1;
-            FillInFields(currentAttrCurveDropDown.GetItemText(currentAttrCurveDropDown.SelectedItem), true);
         }
 
         private void individualCurvesRadioBtn_CheckedChanged(object sender, EventArgs e)
         {
             currentAttrCurveDropDown.Items.Clear();
+            currentAttrCurveDropDown.Items.Add("Level Curve");
             currentAttrCurveDropDown.Items.Add("Health Curve");
             currentAttrCurveDropDown.Items.Add("Magic Curve");
             currentAttrCurveDropDown.Items.Add("Stamina Curve");
@@ -371,22 +181,63 @@ namespace AssetCreator
             currentAttrCurveDropDown.Items.Add("Defense Curve");
             currentAttrCurveDropDown.Items.Add("Power Curve");
             currentAttrCurveDropDown.Items.Add("Fortitude Curve");
-            currentAttrCurveDropDown.SelectedText = "Health Curve";
+            currentAttrCurveDropDown.Items.Add("Speed Curve");
             currentAttrCurveDropDown.SelectedIndex = 0;
-            previousAttrCurveIndex = -1;
-            FillInFields(currentAttrCurveDropDown.GetItemText(currentAttrCurveDropDown.SelectedItem), true);
         }
 
-        private void threeTwoTwoRadioBtn_CheckedChanged(object sender, EventArgs e)
+        void SerializeLevelCurves(XmlWriter wr)
         {
-            currentAttrCurveDropDown.Items.Clear();
-            currentAttrCurveDropDown.Items.Add("Resource Curve");
-            currentAttrCurveDropDown.Items.Add("Physical Curve");
-            currentAttrCurveDropDown.Items.Add("Magical Curve");
-            currentAttrCurveDropDown.SelectedText = "Resource Curve";
-            currentAttrCurveDropDown.SelectedIndex = 0;
-            previousAttrCurveIndex = -1;
-            FillInFields(currentAttrCurveDropDown.GetItemText(currentAttrCurveDropDown.SelectedItem), true);
+            wr.WriteStartElement("Curves");
+
+            CurveData tempCurve;
+            foreach (string curve in curves)
+            {
+                wr.WriteStartElement("Item");
+                if (singleCurveRadioBtn.Checked)
+                    tempCurve = attrCurves["Attribute Curve"];
+                else
+                    tempCurve = attrCurves[curve];
+
+                wr.WriteAttributeString("key", curve);
+                wr.WriteElementString("Type", tempCurve.type.ToString());
+                wr.WriteElementString("Power", tempCurve.power.ToString());
+                wr.WriteElementString("xSkew", tempCurve.xSkew.ToString());
+                wr.WriteElementString("ySkew", tempCurve.ySkew.ToString());
+                wr.WriteElementString("xOffset", tempCurve.xOffset.ToString());
+                wr.WriteElementString("yOffset", tempCurve.yOffset.ToString());
+
+                wr.WriteEndElement();
+            }
+            wr.WriteEndElement();
+        }
+
+        void LoadAttrCurve(XmlNode body)
+        {
+            attrCurves.Clear();
+            key = "";
+            attrCurves.Add("Attribute Curve", new CurveData() { power = 1, xSkew = 1, ySkew = 1, type = FunctionType.Linear });
+            foreach (XmlElement item in body.ChildNodes)
+            {
+                string key = item.Attributes[0].InnerText;
+                if (key == "")
+                    return;
+                
+                FunctionType type = (FunctionType)Enum.Parse(typeof(FunctionType), item["Type"].InnerText);
+                double power = double.Parse(item["Power"].InnerText);
+                double xskew = double.Parse(item["xSkew"].InnerText);
+                double yskew = double.Parse(item["ySkew"].InnerText);
+                double xoffset = double.Parse(item["xOffset"].InnerText);
+                double yoffset = double.Parse(item["yOffset"].InnerText);
+
+                curve = new CurveData() { type=type, power=power, xSkew=xskew, ySkew=yskew, xOffset=xoffset, yOffset=yoffset };
+                attrCurves.Add(key, curve);
+            }
+            //ensure our fields are updated
+            individualCurvesRadioBtn.Checked = true;
+            attrCurves[key] = curve;
+            key = currentAttrCurveDropDown.GetItemText(currentAttrCurveDropDown.SelectedItem);
+            curve = attrCurves[key];
+            FillInFields();
         }
     }
 }

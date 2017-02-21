@@ -42,18 +42,14 @@ namespace AssetCreator
             foreach(object item in currBttlAnimComboBox.Items)
             {
                 string key = currBttlAnimComboBox.GetItemText(item);
-                data = new AnimationData();
-                data.frameWidth = 4;
-                data.framHeight = 4;
+                data = new AnimationData() { delay = 0.25f, frameWidth = 4, framHeight = 4 };
                 battleAnims.Add(key, null);
                 battleAnimData.Add(key, data);
             }
             foreach (object item in currOvrwrldAnimComboBox.Items)
             {
                 string key = currOvrwrldAnimComboBox.GetItemText(item);
-                data = new AnimationData();
-                data.frameWidth = 4;
-                data.framHeight = 4;
+                data = new AnimationData() { delay = 0.25f, frameWidth = 4, framHeight = 4 };
                 overworldAnims.Add(key, null);
                 overworldAnimData.Add(key, data);
             }
@@ -69,11 +65,10 @@ namespace AssetCreator
         /// <param name="originalImg">The spritesheet to draw over</param>
         /// <param name="frameWidth">The width of one frame</param>
         /// <param name="frameHeight">The height of one frame</param>
-        void DrawFramesOnImg(PictureBox target, Image originalImg, int frameWidth, int frameHeight)
+        void DrawFramesOnImg(PictureBox target,  int frameWidth, int frameHeight)
         {
             using (Graphics g = Graphics.FromImage(target.Image))
             {
-                g.DrawImage(originalImg, 0, 0);
                 for (int y = 0; y < target.Image.Height; y += frameHeight)
                 {
                     for (int x = 0; x < target.Image.Width; x += frameWidth)
@@ -102,12 +97,15 @@ namespace AssetCreator
             AnimationData data = battleAnimData[key];
             data.path = dlg.FileName;
             battleAnimData[key] = data;
-
             Image img = Image.FromStream(dlg.OpenFile());
-            Bitmap tempBitmap = new Bitmap(img.Width, img.Height);
             battleAnims[key] = img;
+            Bitmap tempBitmap = new Bitmap(img.Width, img.Height);
             battleSpriteSheetPicBox.Image = tempBitmap;
-            DrawFramesOnImg(battleSpriteSheetPicBox, img, data.frameWidth, data.framHeight);
+
+            using (Graphics g = Graphics.FromImage(battleSpriteSheetPicBox.Image))
+                g.DrawImage(img, 0, 0);
+
+            DrawFramesOnImg(battleSpriteSheetPicBox, data.frameWidth, data.framHeight);
         }
 
         private void currOvrwrldAnimComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -119,6 +117,8 @@ namespace AssetCreator
             ovrwrldFrmWdthNum.Value = data.frameWidth > 0 ? data.frameWidth : 1;
             ovrwrldFrmHgtNum.Value = data.framHeight > 0 ? data.framHeight : 1;
             checkBox1.Checked = data.oneTimeRun;
+            if (overworldSpriteSheetPicBox.Image != null)
+                DrawFramesOnImg(overworldSpriteSheetPicBox, data.frameWidth, data.framHeight);
         }
 
         private void ovrwrldFrmWdthNum_ValueChanged(object sender, EventArgs e)
@@ -130,7 +130,7 @@ namespace AssetCreator
             Bitmap img = (Bitmap)overworldAnims[key] ?? new Bitmap(data.frameWidth + 1, data.framHeight + 1);
             Bitmap tempBitmap = new Bitmap(img.Width, img.Height);
             overworldSpriteSheetPicBox.Image = tempBitmap;
-            DrawFramesOnImg(overworldSpriteSheetPicBox, img, data.frameWidth, data.framHeight);
+            DrawFramesOnImg(overworldSpriteSheetPicBox, data.frameWidth, data.framHeight);
         }
 
         private void ovrwrldFrmHgtNum_ValueChanged(object sender, EventArgs e)
@@ -142,7 +142,7 @@ namespace AssetCreator
             Bitmap img = (Bitmap)overworldAnims[key] ?? new Bitmap(data.frameWidth + 1, data.framHeight + 1);
             Bitmap tempBitmap = new Bitmap(img.Width, img.Height);
             overworldSpriteSheetPicBox.Image = tempBitmap;
-            DrawFramesOnImg(overworldSpriteSheetPicBox, img, data.frameWidth, data.framHeight);
+            DrawFramesOnImg(overworldSpriteSheetPicBox, data.frameWidth, data.framHeight);
         }
 
         private void ovrwrldDelayNum_ValueChanged(object sender, EventArgs e)
@@ -170,6 +170,8 @@ namespace AssetCreator
             bttlFrmWdthNum.Value = data.frameWidth > 0 ? data.frameWidth : 1;
             bttlFrmHgtNum.Value = data.framHeight > 0 ? data.framHeight : 1;
             bttlOTRChkBox.Checked = data.oneTimeRun;
+            if (battleSpriteSheetPicBox.Image != null)
+                DrawFramesOnImg(battleSpriteSheetPicBox, data.frameWidth, data.framHeight);
         }
 
         private void addOvrwrldSheetBtn_Click(object sender, EventArgs e)
@@ -195,7 +197,11 @@ namespace AssetCreator
             Bitmap tempBitmap = new Bitmap(img.Width, img.Height);
             overworldAnims[key] = img;
             overworldSpriteSheetPicBox.Image = tempBitmap;
-            DrawFramesOnImg(overworldSpriteSheetPicBox, img, data.frameWidth, data.framHeight);
+
+            using (Graphics g = Graphics.FromImage(overworldSpriteSheetPicBox.Image))
+                g.DrawImage(img, 0, 0);
+
+            DrawFramesOnImg(overworldSpriteSheetPicBox, data.frameWidth, data.framHeight);
         }
 
         private void bttlFrmWdthNum_ValueChanged(object sender, EventArgs e)
@@ -208,7 +214,7 @@ namespace AssetCreator
             Bitmap img = (Bitmap)battleAnims[key] ?? new Bitmap(data.frameWidth + 1, data.framHeight + 1);
             Bitmap tempBitmap = new Bitmap(img.Width, img.Height);
             battleSpriteSheetPicBox.Image = tempBitmap;
-            DrawFramesOnImg(battleSpriteSheetPicBox, img, data.frameWidth, data.framHeight);
+            DrawFramesOnImg(battleSpriteSheetPicBox, data.frameWidth, data.framHeight);
         }
 
         private void bttlFrmHgtNum_ValueChanged(object sender, EventArgs e)
@@ -220,7 +226,7 @@ namespace AssetCreator
             Bitmap img = (Bitmap)battleAnims[key] ?? new Bitmap(data.frameWidth + 1, data.framHeight + 1);
             Bitmap tempBitmap = new Bitmap(img.Width, img.Height);
             battleSpriteSheetPicBox.Image = tempBitmap;
-            DrawFramesOnImg(battleSpriteSheetPicBox, img, data.frameWidth, data.framHeight);
+            DrawFramesOnImg(battleSpriteSheetPicBox, data.frameWidth, data.framHeight);
         }
 
         private void bttlDelayNum_ValueChanged(object sender, EventArgs e)
@@ -237,6 +243,136 @@ namespace AssetCreator
             AnimationData data = battleAnimData[key];
             data.oneTimeRun = checkBox1.Checked;
             battleAnimData[key] = data;
+        }
+
+        void SerializeAnimations(XmlWriter wr)
+        {
+            AnimationData temp;
+            string textureFilePath = "";
+            System.IO.Directory.CreateDirectory(data.name + "'s Animations");
+            wr.WriteStartElement("Animations");
+
+            if (charType == CharacterType.Overworld || charType == CharacterType.Hybrid)
+            {
+                wr.WriteStartElement("OverworldAnimations");
+                foreach (string overworldAnim in overworldAnimData.Keys)
+                {
+                    temp = overworldAnimData[overworldAnim];
+                    wr.WriteStartElement("Item");
+                    wr.WriteAttributeString("key", overworldAnim);
+
+                    if (temp.path != null)
+                    {
+                        string extension = temp.path.Split('.')[1];
+                        textureFilePath = data.name + "'s Animations\\" + overworldAnim + "." + extension;
+                        if (System.IO.File.Exists(textureFilePath))
+                            System.IO.File.Delete(textureFilePath);
+                        System.IO.File.Copy(temp.path, textureFilePath);
+                    }
+
+                    wr.WriteElementString("Texture", textureFilePath);
+                    wr.WriteElementString("FrameSize", temp.frameWidth.ToString() + " " + temp.framHeight.ToString());
+                    wr.WriteElementString("Delay", temp.delay.ToString());
+                    wr.WriteElementString("OTR", temp.oneTimeRun.ToString());
+                    wr.WriteEndElement();
+                }
+                wr.WriteEndElement();
+            }
+
+            if (charType == CharacterType.Battle || charType == CharacterType.Hybrid)
+            {
+                wr.WriteStartElement("BattleAnimations");
+                foreach (string battleAnim in battleAnimData.Keys)
+                {
+                    temp = battleAnimData[battleAnim];
+                    wr.WriteStartElement("Item");
+                    wr.WriteAttributeString("key", battleAnim);
+
+                    if (temp.path != null)
+                    {
+                        string extension = temp.path.Split('.')[1];
+                        textureFilePath = data.name + "'s Animations\\" + battleAnim + "." + extension;
+                        if (System.IO.File.Exists(textureFilePath))
+                            System.IO.File.Delete(textureFilePath);
+                        System.IO.File.Copy(temp.path, textureFilePath);
+                    }
+
+                    wr.WriteElementString("Texture", textureFilePath);
+                    wr.WriteElementString("FrameSize", temp.frameWidth.ToString() + " " + temp.framHeight.ToString());
+                    wr.WriteElementString("Delay", temp.delay.ToString());
+                    wr.WriteElementString("OTR", temp.oneTimeRun.ToString());
+                    wr.WriteEndElement();
+                }
+                wr.WriteEndElement();
+                wr.WriteEndElement();
+            }
+        }
+
+        void LoadAnims(XmlNode body)
+        {
+            AnimationData tempAnim;
+            Image tempImg;
+
+
+            if(charType == CharacterType.Battle || charType == CharacterType.Hybrid)
+            {
+                battleAnims.Clear();
+                battleAnimData.Clear();
+                foreach(XmlElement battleAnimNode in body["BattleAnimations"].ChildNodes)
+                {
+                    string key = battleAnimNode.GetAttribute("key");
+                    tempAnim = new AnimationData();
+                    tempAnim.path = battleAnimNode["Texture"].InnerText;
+                    tempImg = null;
+                    if (tempAnim.path != "")
+                    {
+                        tempImg = Image.FromFile(tempAnim.path);
+                        Bitmap tempBitmap = new Bitmap(tempImg.Width, tempImg.Height);
+                        battleSpriteSheetPicBox.Image = tempBitmap;
+                        using (Graphics g = Graphics.FromImage(tempImg))
+                            g.DrawImage(tempImg, 0, 0);
+                    }
+                    string[] frameSize = battleAnimNode["FrameSize"].InnerText.Split(' ');
+                    tempAnim.frameWidth = int.Parse(frameSize[0]);
+                    tempAnim.framHeight = int.Parse(frameSize[1]);
+                    tempAnim.delay = float.Parse(battleAnimNode["Delay"].InnerText);
+                    tempAnim.oneTimeRun = bool.Parse(battleAnimNode["OTR"].InnerText);
+
+                    battleAnimData.Add(key, tempAnim);
+                    battleAnims.Add(key, tempImg);
+                }
+                currBttlAnimComboBox.SelectedIndex = 0;
+            }
+
+            if (charType == CharacterType.Overworld || charType == CharacterType.Hybrid)
+            {
+                overworldAnimData.Clear();
+                overworldAnims.Clear();
+                foreach (XmlElement overworldAnimNode in body["OverworldAnimations"].ChildNodes)
+                {
+                    string key = overworldAnimNode.GetAttribute("key");
+                    tempAnim = new AnimationData();
+                    tempAnim.path = overworldAnimNode["Texture"].InnerText;
+                    tempImg = null;
+                    if (tempAnim.path != "")
+                    {
+                        tempImg = Image.FromFile(tempAnim.path);
+                        Bitmap tempBitmap = new Bitmap(tempImg.Width, tempImg.Height);
+                        overworldSpriteSheetPicBox.Image = tempBitmap;
+                        using (Graphics g = Graphics.FromImage(tempImg))
+                            g.DrawImage(tempImg, 0, 0);
+                    }
+
+                    string[] frameSize = overworldAnimNode["FrameSize"].InnerText.Split(' ');
+                    tempAnim.frameWidth = int.Parse(frameSize[0]);
+                    tempAnim.framHeight = int.Parse(frameSize[1]);
+                    tempAnim.delay = float.Parse(overworldAnimNode["Delay"].InnerText);
+                    tempAnim.oneTimeRun = bool.Parse(overworldAnimNode["OTR"].InnerText);
+                    overworldAnimData.Add(key, tempAnim);
+                    overworldAnims.Add(key, tempImg);
+                }
+                currOvrwrldAnimComboBox.SelectedIndex = 0;
+            }
         }
     }
 }

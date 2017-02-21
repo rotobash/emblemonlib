@@ -33,7 +33,11 @@ namespace AssetCreator
         Dictionary<string, AnimationData> animData;
         Dictionary<string, Image> moveAnimSheet;
 
-        string key;
+        MoveData currMove;
+        AnimationData currAnim;
+        Image currImg;
+
+        string key = "";
 
         public MoveListCreator()
         {
@@ -41,7 +45,21 @@ namespace AssetCreator
             animData = new Dictionary<string, AnimationData>();
             moveAnimSheet = new Dictionary<string, Image>();
 
+            currMove = new MoveData() { name = "" };
+            currAnim = new AnimationData() { delay = 0.25f, frameWidth = 4, framHeight = 4 };
+            currImg = null;
+
+            moveData.Add("", currMove);
+            animData.Add("", currAnim);
+            moveAnimSheet.Add("", currImg);
+            
             InitializeComponent();
+            targetComboBox.SelectedIndex = 0;
+            methodComboBox.SelectedIndex = 0;
+            effectComboBox.SelectedIndex = 0;
+            inflictionComboBox.SelectedIndex = 0;
+            moveListBox.Items.Add("");
+            moveListBox.SelectedIndex = 0;
         }
         /// <summary>
         /// Given a PictureBox, an image and the frame size, 
@@ -66,182 +84,165 @@ namespace AssetCreator
             target.Invalidate();
         }
 
-        void SerializeMove(string path, string moveName)
+        void SerializeMove(string path, MoveData move, AnimationData anim)
         {
-            XmlDocument wr = new XmlDocument();
-            using (FileStream f = File.Create(path + moveName + ".xml"))
-            {
-                f.Flush();
-            }
-            wr.Load(path + moveName + ".xml");
-            XmlNode body = wr.CreateElement("Move");
 
+            //we're just going to disallow empty move names
+            if (move.name == "")
+                return;
+
+            using (XmlWriter wr = XmlWriter.Create(path + "\\" + move.name + ".xml"))
+            {
+                wr.WriteStartDocument();
+                wr.WriteStartElement("Move");
+                wr.WriteElementString("Name", move.name);
+                wr.WriteElementString("Power", move.power.ToString());
+                wr.WriteElementString("Cost", move.cost.ToString());
+                wr.WriteElementString("Target", move.target.ToString());
+
+                wr.WriteStartElement("StatusInfliction");
+                wr.WriteAttributeString("inflictChance", move.inflictChance.ToString());
+                wr.WriteString(move.infliction.ToString());
+                wr.WriteEndElement();
+
+                wr.WriteElementString("Method", move.method.ToString());
+                wr.WriteElementString("Effect", move.eff.ToString());
+
+                wr.WriteStartElement("Animation");
+                string animPath = "";
+                if (anim.path != null)
+                {
+                    string extension = anim.path.Split('.')[1];
+                    animPath = "Move Spritesheets\\" + move.name + "." + extension;
+                }
+                wr.WriteElementString("Texture", animPath);
+
+                wr.WriteElementString("FrameSize", anim.frameWidth.ToString() + " " + anim.framHeight.ToString());
+                wr.WriteElementString("Delay", anim.delay.ToString());
+                wr.WriteElementString("OTR", anim.oneTimeRun.ToString());
+                wr.WriteEndElement();
+
+                wr.WriteEndElement();
+                wr.WriteEndDocument();
+                wr.Flush();
+            }
         }
 
         private void loadMoveListToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //create the anim and move data first then add it in to the move list box
+            //the events will be called to update the fields
 
-        }
+            if (MessageBox.Show("This will delete all data currently open. Continue anyway?", "Warning!", MessageBoxButtons.YesNo) == DialogResult.No)
+                return;
 
-        private void generateMoveXmlToolStripMenuItem_Click(object sender, EventArgs e)
-        {
             FolderBrowserDialog dlg = new FolderBrowserDialog();
-            if (dlg.ShowDialog() == DialogResult.Cancel)
-                return;
-
-
-        }
-
-        private void generateMoveListToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog dlg = new OpenFileDialog();
-            if (dlg.ShowDialog() == DialogResult.Cancel)
-                return;
             
-            StreamWriter wr = File.CreateText(dlg.FileName);
-            foreach(string move in moveListBox.Items)
-                wr.WriteLine(move);
-            wr.Flush();
-            wr.Dispose();
+            if (dlg.ShowDialog() == DialogResult.Cancel)
+                return;
+
+            moveData = new Dictionary<string, MoveData>();
+            animData = new Dictionary<string, AnimationData>();
+            moveAnimSheet = new Dictionary<string, Image>();
+            moveListBox.Items.Clear();
+
+            foreach (string move in Directory.EnumerateFiles(dlg.SelectedPath))
+            {
+                if (move.Contains(".xml"))
+                {
+                    MoveData tempMove = new MoveData();
+                    AnimationData tempAnim = new AnimationData();
+                    Image tempImg = null;
+
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(move);
+                    XmlNode body = doc["Move"];
+                    tempMove.name = body["Name"].InnerText;
+                    tempMove.power = int.Parse(body["Power"].InnerText);
+                    tempMove.cost = int.Parse(body["Cost"].InnerText);
+                    tempMove.inflictChance = float.Parse(body["StatusInfliction"].Attributes[0].InnerText);
+                    tempMove.target = (Target)Enum.Parse(typeof(Target), body["Target"].InnerText);
+                    tempMove.infliction = (StatusInfliction)Enum.Parse(typeof(StatusInfliction), body["StatusInfliction"].InnerText);
+                    tempMove.method = (Method)Enum.Parse(typeof(Method), body["Method"].InnerText);
+                    tempMove.eff = (Effect)Enum.Parse(typeof(Effect), body["Effect"].InnerText);
+                    XmlNode animation = body["Animation"];
+                    tempAnim.path = animation["Texture"].InnerText;
+                    string[] frameSize = animation["FrameSize"].InnerText.Split(' ');
+                    tempAnim.frameWidth = int.Parse(frameSize[0]);
+                    tempAnim.framHeight = int.Parse(frameSize[1]);
+                    tempAnim.delay = float.Parse(animation["Delay"].InnerText);
+                    tempAnim.oneTimeRun = bool.Parse(animation["OTR"].InnerText);
+
+                    moveData.Add(tempMove.name, tempMove);
+                    animData.Add(tempMove.name, tempAnim);
+                    if (tempAnim.path != "")
+                        tempImg = Image.FromFile(tempAnim.path);
+
+                    moveAnimSheet.Add(tempMove.name, tempImg);
+                    moveListBox.Items.Add(tempMove.name);
+                }
+            }
         }
 
         private void generateAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            generateMoveListToolStripMenuItem_Click(sender, e);
-            generateMoveXmlToolStripMenuItem_Click(sender, e);
+            FolderBrowserDialog dlg = new FolderBrowserDialog();
 
-        }
+            if (dlg.ShowDialog() == DialogResult.Cancel)
+                return;
 
-        private void nameTextBox_TextChanged(object sender, EventArgs e)
-        {
-            MoveData data = moveData[key];
-            data.name = nameTextBox.Text;
-            moveData[key] = data;
+            Directory.SetCurrentDirectory(dlg.SelectedPath);
+            Directory.CreateDirectory("Move Spritesheets");
+
+            foreach (string move in moveListBox.Items)
+            {
+                AnimationData tempAnim = animData[move];
+                SerializeMove(Directory.GetCurrentDirectory(), moveData[move], tempAnim);
+                if (tempAnim.path != null)
+                {
+                    string extension = tempAnim.path.Split('.')[1];
+                    if(File.Exists("Move Spritesheets\\" + move + "." + extension))
+                        File.Delete("Move Spritesheets\\" + move + "." + extension);
+
+                    File.Copy(tempAnim.path, "Move Spritesheets\\" + move + "." + extension);
+                }
+            }
+
         }
 
         private void targetComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MoveData data = moveData[key];
-
-            switch (effectComboBox.GetItemText(effectComboBox.SelectedItem))
-            {
-                case "Self":
-                    data.target = Target.Self;
-                    break;
-                case "Party Member":
-                    data.target = Target.PartyMember;
-                    break;
-                case "Enemy":
-                    data.target = Target.Enemy;
-                    break;
-                case "Enemy Party":
-                    data.target = Target.EnemyParty;
-                    break;
-                case "Player Party":
-                    data.target = Target.PlayerParty;
-                    break;
-                case "Everyone":
-                    data.target = Target.Everyone;
-                    break;
-                case "Any":
-                    data.target = Target.Any;
-                    break;
-                default:
-                    data.target = Target.None;
-                    break;
-            }
-
-            moveData[key] = data;
+            currMove.target = (Target)targetComboBox.SelectedIndex;
         }
 
         private void methodComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MoveData data = moveData[key];
-
-            switch (effectComboBox.GetItemText(effectComboBox.SelectedItem))
-            {
-                case "Physical":
-                    data.method = Method.Physical;
-                    break;
-                case "Spell":
-                    data.method = Method.Spell;
-                    break;
-                default:
-                    data.method = Method.Physical;
-                    break;
-            }
-
-            moveData[key] = data;
+            currMove.method = (Method)methodComboBox.SelectedIndex;            
         }
 
         private void inflictionComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MoveData data = moveData[key];
-
-            switch (effectComboBox.GetItemText(effectComboBox.SelectedItem))
-            {
-                case "Poison":
-                    data.infliction = StatusInfliction.Poison;
-                    break;
-                case "Stun":
-                    data.infliction = StatusInfliction.Stun;
-                    break;
-                case "Confusion":
-                    data.infliction = StatusInfliction.Confusion;
-                    break;
-                case "Burn":
-                    data.infliction = StatusInfliction.Burn;
-                    break;
-                case "Freeze":
-                    data.infliction = StatusInfliction.Freeze;
-                    break;
-                default:
-                    data.infliction = StatusInfliction.None;
-                    break;
-            }
-
-            moveData[key] = data;
+            currMove.infliction = (StatusInfliction)inflictionComboBox.SelectedIndex;
         }
 
         private void effectComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MoveData data = moveData[key];
-
-            switch(effectComboBox.GetItemText(effectComboBox.SelectedItem))
-            {
-                case "Damaging":
-                    data.eff = Effect.Damaging;
-                    break;
-                case "Curative":
-                    data.eff = Effect.Curative;
-                    break;
-                default:
-                    data.eff = Effect.None;
-                    break;
-            }
-
-            moveData[key] = data;
+            currMove.eff = (Effect)effectComboBox.SelectedIndex;
         }
 
         private void movePowerNumeric_ValueChanged(object sender, EventArgs e)
         {
-            MoveData data = moveData[key];
-            data.power = (int)movePowerNumeric.Value;
-            moveData[key] = data;
+            currMove.power = (int)movePowerNumeric.Value;
         }
 
         private void moveCostNumeric_ValueChanged(object sender, EventArgs e)
         {
-            MoveData data = moveData[key];
-            data.cost = (int)moveCostNumeric.Value;
-            moveData[key] = data;
+            currMove.cost = (int)moveCostNumeric.Value;
         }
 
         private void inflictionChanceNumeric_ValueChanged(object sender, EventArgs e)
         {
-            MoveData data = moveData[key];
-            data.inflictChance = (float)inflictionChanceNumeric.Value;
-            moveData[key] = data;
+            currMove.inflictChance = (float)inflictionChanceNumeric.Value;
         }
 
         private void addMoveAnimBtn_Click(object sender, EventArgs e)
@@ -255,68 +256,56 @@ namespace AssetCreator
                 MessageBox.Show("This will get rid of the current spritesheet for this move. Are you sure you want to add this spritesheet?",
                 "Caution!", MessageBoxButtons.YesNo) == DialogResult.No)
                 return;
+            
+            currAnim.path = dlg.FileName;
 
-            AnimationData data = animData[key];
-            data.path = dlg.FileName;
-            animData[key] = data;
-
-            Image img = Image.FromStream(dlg.OpenFile());
-            Bitmap tempBitmap = new Bitmap(img.Width, img.Height);
-            moveAnimSheet[key] = img;
+            currImg = Image.FromStream(dlg.OpenFile());
+            Bitmap tempBitmap = new Bitmap(currImg.Width, currImg.Height);
             moveAnimPicBox.Image = tempBitmap;
-            DrawFramesOnImg(moveAnimPicBox, img, data.frameWidth, data.framHeight);
+            DrawFramesOnImg(moveAnimPicBox, currImg, currAnim.frameWidth, currAnim.framHeight);
         }
 
         private void moveAnimDelayNum_ValueChanged(object sender, EventArgs e)
         {
-            AnimationData data = animData[key];
-            data.delay = (int)moveAnimDelayNum.Value;
-            animData[key] = data;
+            currAnim.delay = (int)moveAnimDelayNum.Value;
         }
 
         private void moveAnimFrmWdthNum_ValueChanged(object sender, EventArgs e)
         {
-            AnimationData data = animData[key];
-            data.frameWidth = (int)moveAnimFrmWdthNum.Value;
-            animData[key] = data;
-            Bitmap img = (Bitmap)moveAnimSheet[key] ?? new Bitmap(data.frameWidth + 1, data.framHeight + 1);
-            Bitmap tempBitmap = new Bitmap(img.Width, img.Height);
-            moveAnimSheet[key] = img;
+            currAnim.frameWidth = (int)moveAnimFrmWdthNum.Value;
+            currImg = (Bitmap)moveAnimSheet[key] ?? new Bitmap(currAnim.frameWidth + 1, currAnim.framHeight + 1);
+            Bitmap tempBitmap = new Bitmap(currImg.Width, currImg.Height);
             moveAnimPicBox.Image = tempBitmap;
-            DrawFramesOnImg(moveAnimPicBox, img, data.frameWidth, data.framHeight);
+            DrawFramesOnImg(moveAnimPicBox, currImg, currAnim.frameWidth, currAnim.framHeight);
         }
 
         private void moveAnimFrmHgtNum_ValueChanged(object sender, EventArgs e)
         {
-            AnimationData data = animData[key];
-            data.framHeight = (int)moveAnimFrmHgtNum.Value;
-            animData[key] = data;
-            Bitmap img = (Bitmap)moveAnimSheet[key] ?? new Bitmap(data.frameWidth + 1, data.framHeight + 1);
-            Bitmap tempBitmap = new Bitmap(img.Width, img.Height);
-            moveAnimSheet[key] = img;
+            currAnim.framHeight = (int)moveAnimFrmHgtNum.Value;
+            currImg = (Bitmap)moveAnimSheet[key] ?? new Bitmap(currAnim.frameWidth + 1, currAnim.framHeight + 1);
+            Bitmap tempBitmap = new Bitmap(currImg.Width, currImg.Height);
             moveAnimPicBox.Image = tempBitmap;
-            DrawFramesOnImg(moveAnimPicBox, img, data.frameWidth, data.framHeight);
+            DrawFramesOnImg(moveAnimPicBox, currImg, currAnim.frameWidth, currAnim.framHeight);
         }
 
         private void moveAnimOTRChkBox_CheckedChanged(object sender, EventArgs e)
         {
-            AnimationData data = animData[key];
-            data.oneTimeRun = moveAnimOTRChkBox.Checked;
-            animData[key] = data;
+            currAnim.oneTimeRun = moveAnimOTRChkBox.Checked;
         }
 
         private void addMoveBtn_Click(object sender, EventArgs e)
         {
             string tempKey = ShowInputDialog("Add A New Move", "Enter the name of the new move to add:");
-            if (tempKey == "")
+
+            if (moveListBox.Items.Contains(tempKey))
                 return;
 
-            MoveData tempMove = new MoveData();
-            AnimationData tempAnim = new AnimationData();
+            if(key == null)
+                key = tempKey;
 
-            tempAnim.frameWidth = 4;
-            tempAnim.framHeight = 4;
-
+            MoveData tempMove = new MoveData() { name = tempKey };
+            AnimationData tempAnim = new AnimationData() { delay = 0.25f, frameWidth = 4, framHeight = 4 };
+            
             moveData.Add(tempKey, tempMove);
             animData.Add(tempKey, tempAnim);
             moveAnimSheet.Add(tempKey, null);
@@ -325,16 +314,81 @@ namespace AssetCreator
 
         private void deleteMoveBtn_Click(object sender, EventArgs e)
         {
+            if(moveListBox.Items.Count <= 1)
+            {
+                MessageBox.Show("You cannot have an empty moves list.", "Warning!", MessageBoxButtons.OK);
+                return;
+            }
+            string tempKey = key;
             moveData.Remove(key);
             animData.Remove(key);
             moveAnimSheet.Remove(key);
 
+            key = moveData.First().Key;
+
+            currMove = moveData[key];
+            currAnim = animData[key];
+            currImg = moveAnimSheet[key];
+
             moveListBox.Items.Remove(moveListBox.SelectedItem);
+            moveListBox.SelectedIndex = 0;
         }
 
         private void moveListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            key = moveListBox.GetItemText(moveListBox.SelectedItem);
+            moveData[key] = currMove;
+            animData[key] = currAnim;
+            moveAnimSheet[key] = currImg;
+
+            string tempKey = moveListBox.GetItemText(moveListBox.SelectedItem);
+            if (tempKey != "")
+                key = tempKey;
+
+            //switch
+            currMove = moveData[key];
+            currAnim = animData[key];
+
+            movePowerNumeric.Value = currMove.power;
+            moveCostNumeric.Value = currMove.cost;
+            inflictionChanceNumeric.Value = (decimal)currMove.inflictChance;
+
+            targetComboBox.SelectedIndex = (int)currMove.target;
+            inflictionComboBox.SelectedIndex = (int)currMove.infliction;
+            methodComboBox.SelectedIndex = (int)currMove.method;
+            effectComboBox.SelectedIndex = (int)currMove.eff;
+
+            moveAnimPicBox.Image = moveAnimSheet[key];
+            moveAnimDelayNum.Value = (decimal)currAnim.delay;
+            moveAnimFrmWdthNum.Value = currAnim.frameWidth;
+            moveAnimFrmHgtNum.Value = currAnim.framHeight;
+            moveAnimOTRChkBox.Checked = currAnim.oneTimeRun;
+        }
+
+        private void editNameBtn_Click(object sender, EventArgs e)
+        {
+            string newName = ShowInputDialog("Edit Move", "Choose a new move name:");
+            if (!moveListBox.Items.Contains(newName))
+            {
+                moveData.Remove(key);
+                animData.Remove(key);
+                moveAnimSheet.Remove(key);
+
+                currMove.name = newName;
+                moveData.Add(newName, currMove);
+                animData.Add(newName, currAnim);
+                moveAnimSheet.Add(newName, currImg);
+
+                moveListBox.Items.Add(newName);
+                moveListBox.Items.Remove(key);
+            }
+            else
+            {
+                key = newName;
+                currMove = moveData[key];
+                currAnim = animData[key];
+                currImg = moveAnimSheet[key];
+                moveListBox.SelectedIndex = moveListBox.Items.IndexOf(key);
+            }
         }
 
         public string ShowInputDialog(string title, string message)

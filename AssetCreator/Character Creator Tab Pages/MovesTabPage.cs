@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Content;
 
 using EmblemonLib.Data;
 using EmblemonLib.Utilities;
+using System.IO;
 
 namespace AssetCreator
 {
@@ -31,17 +32,16 @@ namespace AssetCreator
 
         private void loadMoveLstBtn_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "Move List Files (*.txt;)|*.txt;";
+            FolderBrowserDialog dlg = new FolderBrowserDialog();
             if (dlg.ShowDialog() == DialogResult.Cancel)
                 return;
-
-            moveListPath = dlg.FileName;
-            loadedMoveStrArr = System.IO.File.ReadAllText(moveListPath).Split('\n');
+            
             loadedMovesList.Items.Clear();
-            foreach (string move in loadedMoveStrArr)
+
+            foreach (string move in Directory.EnumerateFiles(dlg.SelectedPath))
             {
-                loadedMovesList.Items.Add(move);
+                if (Path.GetExtension(move) == ".xml")
+                    loadedMovesList.Items.Add(Path.GetFileNameWithoutExtension(move));
             }
         }
 
@@ -58,12 +58,21 @@ namespace AssetCreator
                 knownMovesList.Items.Remove(knownMovesList.SelectedItem);
         }
 
-        private void addCustomMoveBtn_Click(object sender, EventArgs e)
+        void SerializeMoveList(XmlWriter wr)
         {
-            string res = ShowInputDialog("Add A Custom Move", "Enter the name of the move you want to add:");
-            if (res == "")
-                return;
-            knownMovesList.Items.Add(res);
+            wr.WriteStartElement("MoveList");
+            foreach (string move in knownMovesList.Items)
+                wr.WriteString(move + " ");
+            wr.WriteEndElement();
+        }
+
+        void LoadMoveList(XmlNode body)
+        {
+            string[] moveList = body.InnerText.Split(' ');
+            foreach(string move in moveList)
+            {
+                knownMovesList.Items.Add(move);
+            }
         }
     }
 }

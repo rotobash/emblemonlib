@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Content;
 
 using EmblemonLib.Data;
 using EmblemonLib.Utilities;
+using System.IO;
 
 namespace AssetCreator
 {
@@ -62,21 +63,29 @@ namespace AssetCreator
                 return;
 
             loadedCharacterPath = dlg.FileName;
-            doc.Load(loadedCharacterPath);
-            XmlNode type = doc["Character"].SelectSingleNode("Type");
-            InstantiateCharacter(type.InnerText);
-            switch (charType)
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(dlg.FileName));
+            try
             {
-                case CharacterType.Hybrid:
-                    hybridChar = CharacterFactory.GetInstance.BuildHybrid(loadedCharacterPath, game.Content);
-                    break;
-                case CharacterType.Battle:
-                    battleChar = CharacterFactory.GetInstance.BuildBattle(loadedCharacterPath, game.Content);
-                    break;
-                case CharacterType.Overworld:
-                    overChar = CharacterFactory.GetInstance.BuildOverworld(loadedCharacterPath, game.Content);
-                    break;
+                doc.Load(loadedCharacterPath);
             }
+            catch (XmlException ex)
+            {
+                MessageBox.Show("Could not load character, file may be corrupt.");
+                return;
+            }
+            XmlNode body = doc["Character"];
+            InstantiateCharacter(body["Type"].InnerText);
+            nameTextBox.Text = body["Name"].InnerText;
+
+            if(charType == CharacterType.Battle || charType == CharacterType.Hybrid)
+            {
+                LoadAttrCurve(body["Curves"]);
+                LoadMoveList(body["MoveList"]);
+                LoadStats(body["CharacterStats"]);
+            }
+
+            LoadAnims(body["Animations"]);
+            
         }
 
         private void InstantiateCharacter(string type)
@@ -86,7 +95,6 @@ namespace AssetCreator
                 case "Hybrid":
                     {
                         charType = CharacterType.Hybrid;
-                        //Enable everything
                         ToggleOverworldForms(true);
                         ToggleBattleForms(true);
                     }
@@ -95,7 +103,6 @@ namespace AssetCreator
                 case "Battle":
                     {
                         charType = CharacterType.Battle;
-                        //Enable things relevant to battle characters
                         ToggleBattleForms(true);
                         ToggleOverworldForms(false);
                     }
@@ -104,9 +111,8 @@ namespace AssetCreator
                 case "Overworld":
                     {
                         charType = CharacterType.Overworld;
-                        //Enable things relevant to overworld characters
-                        ToggleOverworldForms(true);
                         ToggleBattleForms(false);
+                        ToggleOverworldForms(true);
                     }
                     break;
             }
@@ -123,6 +129,8 @@ namespace AssetCreator
             charDefenseNumeric.Enabled = enabled;
             charPowerNumeric.Enabled = enabled;
             charFortitudeNumeric.Enabled = enabled;
+            charSpeedNum.Enabled = enabled;
+            charLevelNum.Enabled = enabled;
 
             battleSpriteSheetPicBox.Enabled = enabled;
             currBttlAnimComboBox.Enabled = enabled;
@@ -146,7 +154,34 @@ namespace AssetCreator
 
         private void generateXMLToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "XML Files(*.xml;)|*.xml;";
+            dlg.RestoreDirectory = false;
 
+            if (dlg.ShowDialog() == DialogResult.Cancel)
+                return;
+            
+            using (XmlWriter wr = XmlWriter.Create(dlg.FileName))
+            {
+                wr.WriteStartDocument();
+                wr.WriteStartElement("Character");
+                wr.WriteElementString("Type", charType.ToString());
+                wr.WriteElementString("Name", nameTextBox.Text);
+
+                System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(dlg.FileName));
+
+                if (charType == CharacterType.Battle || charType == CharacterType.Hybrid)
+                {
+                    SerializeLevelCurves(wr);
+                    SerializeAttributes(wr);
+                    SerializeMoveList(wr);
+                }
+                SerializeAnimations(wr);
+
+                wr.WriteEndElement();
+                wr.WriteEndDocument();
+                wr.Flush();
+            }
         }
     }
 }
