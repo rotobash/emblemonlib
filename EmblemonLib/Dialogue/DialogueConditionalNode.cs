@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace Dialogue.Utils
+namespace Dialogue
 {
     public class DialogueConditionalNode : DialogueTreeNode
     {

@@ -1,10 +1,8 @@
 ﻿using Dialogue.Contracts;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 
-namespace Dialogue.Utils
+namespace Dialogue
 {
     public class DialogueBranchNode : DialogueTreeNode
     {

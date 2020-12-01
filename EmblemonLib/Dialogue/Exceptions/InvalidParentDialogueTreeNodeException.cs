@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Dialogue.Contracts;
 
-namespace Dialogue.Utils.Exceptions
+namespace Dialogue.Exceptions
 {
     [Serializable]
     public class InvalidParentDialogueTreeNodeException : Exception

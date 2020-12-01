@@ -2,10 +2,22 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Dialogue.Contracts;
-using Dialogue.Utils;
+using Dialogue;
 
 namespace Dialogue
 {
+    /// <summary>
+    /// To do:
+    /// This class is supposed to turn a text file with certain syntax and parse it into a proper XML file
+    /// The syntax as I remember it:
+    /// {{ }} - get a variable
+    /// ?? - if condition
+    /// :? - else if condition
+    /// :: - else condition
+    /// ## - no idea
+    /// -> - Response prompt?
+    /// empty line - speaker/portrait change
+    /// </summary>
     public class Interpolater
     {
         Dictionary<string, bool> boolVariables;

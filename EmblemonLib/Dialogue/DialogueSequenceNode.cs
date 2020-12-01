@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Xml;
 using Dialogue.Contracts;
 
-namespace Dialogue.Utils
+namespace Dialogue
 {
     public class DialogueSequenceNode : DialogueTreeNode
     {

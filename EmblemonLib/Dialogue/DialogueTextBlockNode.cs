@@ -1,11 +1,11 @@
 using Dialogue.Contracts;
-using Dialogue.Utils.Exceptions;
+using Dialogue.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace Dialogue.Utils
+namespace Dialogue
 {
     public class DialogueTextBlockNode : DialogueTreeNode
     {

@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Dialogue
 {
+    /// <summary>
+    /// Simulates text being typed out character by character.
+    /// Pauses for punctuation marks for added effect.
+    /// How to use: Set() your dialogue block, UpdateTimers to update pauses, Type() to get the current sting block, Reset() when finished and start over
+    /// You can also force the entire text block to appear early by calling Finish()
+    /// </summary>
     public class TextTyper
     {
         public bool IsTyping { get; private set; }
