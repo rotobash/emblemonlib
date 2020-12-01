@@ -90,12 +90,12 @@
             this.loadMoveLstBtn = new System.Windows.Forms.Button();
             this.attrCurvesTab = new System.Windows.Forms.TabPage();
             this.attrCurveTable = new System.Windows.Forms.TableLayoutPanel();
+            this.label10 = new System.Windows.Forms.Label();
+            this.currentAttrCurveDropDown = new System.Windows.Forms.ComboBox();
+            this.attrCurvePicBox = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.individualCurvesRadioBtn = new System.Windows.Forms.RadioButton();
             this.singleCurveRadioBtn = new System.Windows.Forms.RadioButton();
-            this.attrCurvePicBox = new System.Windows.Forms.PictureBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.currentAttrCurveDropDown = new System.Windows.Forms.ComboBox();
             this.attrCurveFnComboBox = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
             this.attrCurvePwrNumBox = new System.Windows.Forms.NumericUpDown();
@@ -112,6 +112,19 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateXMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.questTabPage = new System.Windows.Forms.TabPage();
+            this.questGivenList = new System.Windows.Forms.ListBox();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.addQuestBtn = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.conditionComboBox = new System.Windows.Forms.ComboBox();
+            this.questNameTextBox = new System.Windows.Forms.TextBox();
+            this.nameLabel = new System.Windows.Forms.Label();
+            this.entityNameTextBox = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.entityAmountNum = new System.Windows.Forms.NumericUpDown();
             this.characterSheetPanel.SuspendLayout();
             this.statsTab.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -138,14 +151,18 @@
             this.tableLayoutPanel2.SuspendLayout();
             this.attrCurvesTab.SuspendLayout();
             this.attrCurveTable.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.attrCurvePicBox)).BeginInit();
+            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.attrCurvePwrNumBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.attrCurveYOffNumBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.attrCurveXOffNumBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.attrCurveYSkewNumBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.attrCurveXSkewNumBox)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.questTabPage.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.entityAmountNum)).BeginInit();
             this.SuspendLayout();
             // 
             // characterSheetPanel
@@ -154,6 +171,7 @@
             this.characterSheetPanel.Controls.Add(this.animationsTab);
             this.characterSheetPanel.Controls.Add(this.movesTab);
             this.characterSheetPanel.Controls.Add(this.attrCurvesTab);
+            this.characterSheetPanel.Controls.Add(this.questTabPage);
             this.characterSheetPanel.Location = new System.Drawing.Point(12, 27);
             this.characterSheetPanel.Name = "characterSheetPanel";
             this.characterSheetPanel.SelectedIndex = 0;
@@ -178,7 +196,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70.90909F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 70F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 72F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 285F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 286F));
             this.tableLayoutPanel1.Controls.Add(this.characterTypeComboBox, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.nameTextBox, 4, 1);
             this.tableLayoutPanel1.Controls.Add(this.label2, 3, 1);
@@ -236,7 +254,7 @@
             // 
             // nameTextBox
             // 
-            this.nameTextBox.Location = new System.Drawing.Point(407, 55);
+            this.nameTextBox.Location = new System.Drawing.Point(406, 55);
             this.nameTextBox.Name = "nameTextBox";
             this.nameTextBox.Size = new System.Drawing.Size(158, 20);
             this.nameTextBox.TabIndex = 5;
@@ -245,7 +263,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(335, 52);
+            this.label2.Location = new System.Drawing.Point(334, 52);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(38, 13);
             this.label2.TabIndex = 2;
@@ -263,7 +281,7 @@
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(335, 364);
+            this.label27.Location = new System.Drawing.Point(334, 364);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(50, 13);
             this.label27.TabIndex = 15;
@@ -294,7 +312,7 @@
             // 
             // charDefenseNumeric
             // 
-            this.charDefenseNumeric.Location = new System.Drawing.Point(407, 367);
+            this.charDefenseNumeric.Location = new System.Drawing.Point(406, 367);
             this.charDefenseNumeric.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -328,7 +346,7 @@
             // 
             this.label31.AutoSize = true;
             this.tableLayoutPanel1.SetColumnSpan(this.label31, 2);
-            this.label31.Location = new System.Drawing.Point(265, 104);
+            this.label31.Location = new System.Drawing.Point(264, 104);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(126, 13);
             this.label31.TabIndex = 21;
@@ -338,7 +356,7 @@
             // 
             this.label30.AutoSize = true;
             this.tableLayoutPanel1.SetColumnSpan(this.label30, 2);
-            this.label30.Location = new System.Drawing.Point(265, 0);
+            this.label30.Location = new System.Drawing.Point(264, 0);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(132, 13);
             this.label30.TabIndex = 20;
@@ -364,7 +382,7 @@
             // 
             // charStaminaNumeric
             // 
-            this.charStaminaNumeric.Location = new System.Drawing.Point(407, 263);
+            this.charStaminaNumeric.Location = new System.Drawing.Point(406, 263);
             this.charStaminaNumeric.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -411,7 +429,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(335, 260);
+            this.label25.Location = new System.Drawing.Point(334, 260);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(45, 13);
             this.label25.TabIndex = 13;
@@ -429,7 +447,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(335, 208);
+            this.label3.Location = new System.Drawing.Point(334, 208);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(41, 13);
             this.label3.TabIndex = 3;
@@ -437,7 +455,7 @@
             // 
             // charHealthNumeric
             // 
-            this.charHealthNumeric.Location = new System.Drawing.Point(407, 211);
+            this.charHealthNumeric.Location = new System.Drawing.Point(406, 211);
             this.charHealthNumeric.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -519,7 +537,7 @@
             // 
             // charFortitudeNumeric
             // 
-            this.charFortitudeNumeric.Location = new System.Drawing.Point(407, 419);
+            this.charFortitudeNumeric.Location = new System.Drawing.Point(406, 419);
             this.charFortitudeNumeric.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -543,7 +561,7 @@
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(335, 416);
+            this.label29.Location = new System.Drawing.Point(334, 416);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(51, 13);
             this.label29.TabIndex = 18;
@@ -592,7 +610,7 @@
             this.animTable.ColumnCount = 3;
             this.animTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 42.59259F));
             this.animTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 57.40741F));
-            this.animTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 506F));
+            this.animTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 507F));
             this.animTable.Controls.Add(this.currOvrwrldAnimComboBox, 1, 0);
             this.animTable.Controls.Add(this.currBttlAnimComboBox, 1, 6);
             this.animTable.Controls.Add(this.label8, 0, 0);
@@ -642,7 +660,7 @@
             "Down",
             "Left",
             "Right"});
-            this.currOvrwrldAnimComboBox.Location = new System.Drawing.Point(81, 3);
+            this.currOvrwrldAnimComboBox.Location = new System.Drawing.Point(80, 3);
             this.currOvrwrldAnimComboBox.Name = "currOvrwrldAnimComboBox";
             this.currOvrwrldAnimComboBox.Size = new System.Drawing.Size(99, 21);
             this.currOvrwrldAnimComboBox.TabIndex = 2;
@@ -657,7 +675,7 @@
             "Casting",
             "Defending",
             "Shielding"});
-            this.currBttlAnimComboBox.Location = new System.Drawing.Point(81, 267);
+            this.currBttlAnimComboBox.Location = new System.Drawing.Point(80, 267);
             this.currBttlAnimComboBox.Name = "currBttlAnimComboBox";
             this.currBttlAnimComboBox.Size = new System.Drawing.Size(99, 21);
             this.currBttlAnimComboBox.TabIndex = 3;
@@ -683,7 +701,7 @@
             // 
             // battleSpriteSheetPicBox
             // 
-            this.battleSpriteSheetPicBox.Location = new System.Drawing.Point(186, 267);
+            this.battleSpriteSheetPicBox.Location = new System.Drawing.Point(185, 267);
             this.battleSpriteSheetPicBox.Name = "battleSpriteSheetPicBox";
             this.animTable.SetRowSpan(this.battleSpriteSheetPicBox, 6);
             this.battleSpriteSheetPicBox.Size = new System.Drawing.Size(486, 258);
@@ -692,7 +710,7 @@
             // 
             // overworldSpriteSheetPicBox
             // 
-            this.overworldSpriteSheetPicBox.Location = new System.Drawing.Point(186, 3);
+            this.overworldSpriteSheetPicBox.Location = new System.Drawing.Point(185, 3);
             this.overworldSpriteSheetPicBox.Name = "overworldSpriteSheetPicBox";
             this.animTable.SetRowSpan(this.overworldSpriteSheetPicBox, 6);
             this.overworldSpriteSheetPicBox.Size = new System.Drawing.Size(486, 258);
@@ -731,7 +749,7 @@
             this.animTable.SetColumnSpan(this.addOvrwrldSheetBtn, 2);
             this.addOvrwrldSheetBtn.Location = new System.Drawing.Point(3, 53);
             this.addOvrwrldSheetBtn.Name = "addOvrwrldSheetBtn";
-            this.addOvrwrldSheetBtn.Size = new System.Drawing.Size(177, 47);
+            this.addOvrwrldSheetBtn.Size = new System.Drawing.Size(176, 47);
             this.addOvrwrldSheetBtn.TabIndex = 10;
             this.addOvrwrldSheetBtn.Text = "Load Sprite Sheet...";
             this.addOvrwrldSheetBtn.UseVisualStyleBackColor = true;
@@ -744,7 +762,7 @@
             0,
             0,
             0});
-            this.ovrwrldFrmWdthNum.Location = new System.Drawing.Point(81, 115);
+            this.ovrwrldFrmWdthNum.Location = new System.Drawing.Point(80, 115);
             this.ovrwrldFrmWdthNum.Maximum = new decimal(new int[] {
             512,
             0,
@@ -772,7 +790,7 @@
             0,
             0,
             0});
-            this.ovrwrldFrmHgtNum.Location = new System.Drawing.Point(81, 147);
+            this.ovrwrldFrmHgtNum.Location = new System.Drawing.Point(80, 147);
             this.ovrwrldFrmHgtNum.Maximum = new decimal(new int[] {
             512,
             0,
@@ -796,7 +814,7 @@
             // ovrwrldDelayNum
             // 
             this.ovrwrldDelayNum.DecimalPlaces = 2;
-            this.ovrwrldDelayNum.Location = new System.Drawing.Point(81, 181);
+            this.ovrwrldDelayNum.Location = new System.Drawing.Point(80, 181);
             this.ovrwrldDelayNum.Maximum = new decimal(new int[] {
             5,
             0,
@@ -820,7 +838,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(81, 215);
+            this.checkBox1.Location = new System.Drawing.Point(80, 215);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(99, 17);
             this.checkBox1.TabIndex = 15;
@@ -833,7 +851,7 @@
             this.animTable.SetColumnSpan(this.addBattleSheetBtn, 2);
             this.addBattleSheetBtn.Location = new System.Drawing.Point(3, 313);
             this.addBattleSheetBtn.Name = "addBattleSheetBtn";
-            this.addBattleSheetBtn.Size = new System.Drawing.Size(177, 48);
+            this.addBattleSheetBtn.Size = new System.Drawing.Size(176, 48);
             this.addBattleSheetBtn.TabIndex = 16;
             this.addBattleSheetBtn.Text = "Load Sprite Sheet...";
             this.addBattleSheetBtn.UseVisualStyleBackColor = true;
@@ -869,7 +887,7 @@
             // bttlOTRChkBox
             // 
             this.bttlOTRChkBox.AutoSize = true;
-            this.bttlOTRChkBox.Location = new System.Drawing.Point(81, 481);
+            this.bttlOTRChkBox.Location = new System.Drawing.Point(80, 481);
             this.bttlOTRChkBox.Name = "bttlOTRChkBox";
             this.bttlOTRChkBox.Size = new System.Drawing.Size(99, 17);
             this.bttlOTRChkBox.TabIndex = 21;
@@ -880,7 +898,7 @@
             // bttlDelayNum
             // 
             this.bttlDelayNum.DecimalPlaces = 2;
-            this.bttlDelayNum.Location = new System.Drawing.Point(81, 443);
+            this.bttlDelayNum.Location = new System.Drawing.Point(80, 443);
             this.bttlDelayNum.Maximum = new decimal(new int[] {
             5,
             0,
@@ -908,7 +926,7 @@
             0,
             0,
             0});
-            this.bttlFrmHgtNum.Location = new System.Drawing.Point(81, 411);
+            this.bttlFrmHgtNum.Location = new System.Drawing.Point(80, 411);
             this.bttlFrmHgtNum.Maximum = new decimal(new int[] {
             512,
             0,
@@ -936,7 +954,7 @@
             0,
             0,
             0});
-            this.bttlFrmWdthNum.Location = new System.Drawing.Point(81, 379);
+            this.bttlFrmWdthNum.Location = new System.Drawing.Point(80, 379);
             this.bttlFrmWdthNum.Maximum = new decimal(new int[] {
             512,
             0,
@@ -1053,7 +1071,7 @@
             this.attrCurveTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 68F));
             this.attrCurveTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46.05678F));
             this.attrCurveTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 53.94322F));
-            this.attrCurveTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 314F));
+            this.attrCurveTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 315F));
             this.attrCurveTable.Controls.Add(this.label10, 2, 0);
             this.attrCurveTable.Controls.Add(this.currentAttrCurveDropDown, 3, 0);
             this.attrCurveTable.Controls.Add(this.attrCurvePicBox, 2, 1);
@@ -1093,6 +1111,45 @@
             this.attrCurveTable.Size = new System.Drawing.Size(696, 531);
             this.attrCurveTable.TabIndex = 0;
             // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(215, 0);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(88, 13);
+            this.label10.TabIndex = 1;
+            this.label10.Text = "Atttribute Curves:";
+            // 
+            // currentAttrCurveDropDown
+            // 
+            this.currentAttrCurveDropDown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.currentAttrCurveDropDown.FormattingEnabled = true;
+            this.currentAttrCurveDropDown.Items.AddRange(new object[] {
+            "Level Curve",
+            "Health Curve",
+            "Magic Curve",
+            "Stamina Curve",
+            "Speed Curve",
+            "Strength Curve",
+            "Defense Curve",
+            "Power Curve",
+            "Fortitude Curve"});
+            this.currentAttrCurveDropDown.Location = new System.Drawing.Point(383, 3);
+            this.currentAttrCurveDropDown.Name = "currentAttrCurveDropDown";
+            this.currentAttrCurveDropDown.Size = new System.Drawing.Size(149, 21);
+            this.currentAttrCurveDropDown.TabIndex = 0;
+            this.currentAttrCurveDropDown.SelectedIndexChanged += new System.EventHandler(this.currentAttrCurveDropDown_SelectedIndexChanged);
+            // 
+            // attrCurvePicBox
+            // 
+            this.attrCurveTable.SetColumnSpan(this.attrCurvePicBox, 2);
+            this.attrCurvePicBox.Location = new System.Drawing.Point(215, 39);
+            this.attrCurvePicBox.Name = "attrCurvePicBox";
+            this.attrCurveTable.SetRowSpan(this.attrCurvePicBox, 15);
+            this.attrCurvePicBox.Size = new System.Drawing.Size(476, 489);
+            this.attrCurvePicBox.TabIndex = 2;
+            this.attrCurvePicBox.TabStop = false;
+            // 
             // groupBox1
             // 
             this.attrCurveTable.SetColumnSpan(this.groupBox1, 2);
@@ -1127,45 +1184,6 @@
             this.singleCurveRadioBtn.Text = "Use Single Curve";
             this.singleCurveRadioBtn.UseVisualStyleBackColor = true;
             this.singleCurveRadioBtn.CheckedChanged += new System.EventHandler(this.singleCurveRadioBtn_CheckedChanged);
-            // 
-            // attrCurvePicBox
-            // 
-            this.attrCurveTable.SetColumnSpan(this.attrCurvePicBox, 2);
-            this.attrCurvePicBox.Location = new System.Drawing.Point(215, 39);
-            this.attrCurvePicBox.Name = "attrCurvePicBox";
-            this.attrCurveTable.SetRowSpan(this.attrCurvePicBox, 15);
-            this.attrCurvePicBox.Size = new System.Drawing.Size(476, 489);
-            this.attrCurvePicBox.TabIndex = 2;
-            this.attrCurvePicBox.TabStop = false;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(215, 0);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(88, 13);
-            this.label10.TabIndex = 1;
-            this.label10.Text = "Atttribute Curves:";
-            // 
-            // currentAttrCurveDropDown
-            // 
-            this.currentAttrCurveDropDown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.currentAttrCurveDropDown.FormattingEnabled = true;
-            this.currentAttrCurveDropDown.Items.AddRange(new object[] {
-            "Level Curve",
-            "Health Curve",
-            "Magic Curve",
-            "Stamina Curve",
-            "Speed Curve",
-            "Strength Curve",
-            "Defense Curve",
-            "Power Curve",
-            "Fortitude Curve"});
-            this.currentAttrCurveDropDown.Location = new System.Drawing.Point(384, 3);
-            this.currentAttrCurveDropDown.Name = "currentAttrCurveDropDown";
-            this.currentAttrCurveDropDown.Size = new System.Drawing.Size(149, 21);
-            this.currentAttrCurveDropDown.TabIndex = 0;
-            this.currentAttrCurveDropDown.SelectedIndexChanged += new System.EventHandler(this.currentAttrCurveDropDown_SelectedIndexChanged);
             // 
             // attrCurveFnComboBox
             // 
@@ -1345,6 +1363,169 @@
             this.generateXMLToolStripMenuItem.Text = "Generate XML...";
             this.generateXMLToolStripMenuItem.Click += new System.EventHandler(this.generateXMLToolStripMenuItem_Click);
             // 
+            // questTabPage
+            // 
+            this.questTabPage.Controls.Add(this.tableLayoutPanel3);
+            this.questTabPage.Location = new System.Drawing.Point(4, 22);
+            this.questTabPage.Name = "questTabPage";
+            this.questTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.questTabPage.Size = new System.Drawing.Size(702, 537);
+            this.questTabPage.TabIndex = 4;
+            this.questTabPage.Text = "Quests Given";
+            this.questTabPage.UseVisualStyleBackColor = true;
+            // 
+            // questGivenList
+            // 
+            this.questGivenList.FormattingEnabled = true;
+            this.questGivenList.Location = new System.Drawing.Point(3, 35);
+            this.questGivenList.Name = "questGivenList";
+            this.questGivenList.Size = new System.Drawing.Size(120, 485);
+            this.questGivenList.TabIndex = 0;
+            this.questGivenList.SelectedIndexChanged += new System.EventHandler(this.questGivenList_SelectedIndexChanged);
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 18.84058F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 81.15942F));
+            this.tableLayoutPanel3.Controls.Add(this.questGivenList, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel4, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.addQuestBtn, 1, 0);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(6, 6);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.095238F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.90476F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(690, 525);
+            this.tableLayoutPanel3.TabIndex = 2;
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 5;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.92639F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 23.33932F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 21.72352F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19.21005F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.80072F));
+            this.tableLayoutPanel4.Controls.Add(this.label7, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.label11, 0, 1);
+            this.tableLayoutPanel4.Controls.Add(this.conditionComboBox, 1, 1);
+            this.tableLayoutPanel4.Controls.Add(this.questNameTextBox, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this.nameLabel, 1, 2);
+            this.tableLayoutPanel4.Controls.Add(this.entityNameTextBox, 2, 2);
+            this.tableLayoutPanel4.Controls.Add(this.label12, 1, 3);
+            this.tableLayoutPanel4.Controls.Add(this.entityAmountNum, 2, 3);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(133, 35);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 4;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(554, 485);
+            this.tableLayoutPanel4.TabIndex = 1;
+            // 
+            // addQuestBtn
+            // 
+            this.addQuestBtn.Location = new System.Drawing.Point(133, 3);
+            this.addQuestBtn.Name = "addQuestBtn";
+            this.addQuestBtn.Size = new System.Drawing.Size(273, 23);
+            this.addQuestBtn.TabIndex = 2;
+            this.addQuestBtn.Text = "Add Quest";
+            this.addQuestBtn.UseVisualStyleBackColor = true;
+            this.addQuestBtn.Click += new System.EventHandler(this.addQuestBtn_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(38, 26);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "Quest Name:";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(3, 121);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(54, 26);
+            this.label11.TabIndex = 1;
+            this.label11.Text = "Give Condition:";
+            // 
+            // conditionComboBox
+            // 
+            this.tableLayoutPanel4.SetColumnSpan(this.conditionComboBox, 2);
+            this.conditionComboBox.FormattingEnabled = true;
+            this.conditionComboBox.Items.AddRange(new object[] {
+            "Has Item",
+            "Has Killed",
+            "Has Party Member",
+            "None"});
+            this.conditionComboBox.Location = new System.Drawing.Point(74, 124);
+            this.conditionComboBox.Name = "conditionComboBox";
+            this.conditionComboBox.Size = new System.Drawing.Size(243, 21);
+            this.conditionComboBox.TabIndex = 2;
+            this.conditionComboBox.SelectedIndexChanged += new System.EventHandler(this.conditionComboBox_SelectedIndexChanged);
+            // 
+            // questNameTextBox
+            // 
+            this.tableLayoutPanel4.SetColumnSpan(this.questNameTextBox, 2);
+            this.questNameTextBox.Location = new System.Drawing.Point(74, 3);
+            this.questNameTextBox.Name = "questNameTextBox";
+            this.questNameTextBox.Size = new System.Drawing.Size(243, 20);
+            this.questNameTextBox.TabIndex = 3;
+            this.questNameTextBox.TextChanged += new System.EventHandler(this.questNameTextBox_TextChanged);
+            // 
+            // nameLabel
+            // 
+            this.nameLabel.AutoSize = true;
+            this.nameLabel.Location = new System.Drawing.Point(74, 242);
+            this.nameLabel.Name = "nameLabel";
+            this.nameLabel.Size = new System.Drawing.Size(38, 13);
+            this.nameLabel.TabIndex = 4;
+            this.nameLabel.Text = "Name:";
+            // 
+            // entityNameTextBox
+            // 
+            this.entityNameTextBox.Location = new System.Drawing.Point(203, 245);
+            this.entityNameTextBox.Name = "entityNameTextBox";
+            this.entityNameTextBox.Size = new System.Drawing.Size(114, 20);
+            this.entityNameTextBox.TabIndex = 5;
+            this.entityNameTextBox.TextChanged += new System.EventHandler(this.entityNameTextBox_TextChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(74, 363);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(46, 13);
+            this.label12.TabIndex = 6;
+            this.label12.Text = "Amount:";
+            // 
+            // entityAmountNum
+            // 
+            this.entityAmountNum.Location = new System.Drawing.Point(203, 366);
+            this.entityAmountNum.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.entityAmountNum.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.entityAmountNum.Name = "entityAmountNum";
+            this.entityAmountNum.Size = new System.Drawing.Size(114, 20);
+            this.entityAmountNum.TabIndex = 7;
+            this.entityAmountNum.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.entityAmountNum.ValueChanged += new System.EventHandler(this.entityAmountNum_ValueChanged);
+            // 
             // CharacterCreator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1385,9 +1566,9 @@
             this.attrCurvesTab.ResumeLayout(false);
             this.attrCurveTable.ResumeLayout(false);
             this.attrCurveTable.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.attrCurvePicBox)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.attrCurvePicBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.attrCurvePwrNumBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.attrCurveYOffNumBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.attrCurveXOffNumBox)).EndInit();
@@ -1395,6 +1576,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.attrCurveXSkewNumBox)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.questTabPage.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.entityAmountNum)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1486,5 +1672,18 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TabPage questTabPage;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.ListBox questGivenList;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.ComboBox conditionComboBox;
+        private System.Windows.Forms.TextBox questNameTextBox;
+        private System.Windows.Forms.Label nameLabel;
+        private System.Windows.Forms.TextBox entityNameTextBox;
+        private System.Windows.Forms.Button addQuestBtn;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.NumericUpDown entityAmountNum;
     }
 }

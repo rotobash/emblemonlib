@@ -65,8 +65,17 @@ namespace AssetCreator
         /// <param name="originalImg">The spritesheet to draw over</param>
         /// <param name="frameWidth">The width of one frame</param>
         /// <param name="frameHeight">The height of one frame</param>
-        void DrawFramesOnImg(PictureBox target,  int frameWidth, int frameHeight)
+        void DrawFramesOnImg(PictureBox target, int frameWidth, int frameHeight)
         {
+            if (target.Image == null)
+            {
+                Bitmap bmp = new Bitmap(target.Width, target.Height);
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    g.Clear(Color.White);
+                }
+                target.Image = bmp;
+            }
             using (Graphics g = Graphics.FromImage(target.Image))
             {
                 for (int y = 0; y < target.Image.Height; y += frameHeight)
@@ -99,11 +108,6 @@ namespace AssetCreator
             battleAnimData[key] = data;
             Image img = Image.FromStream(dlg.OpenFile());
             battleAnims[key] = img;
-            Bitmap tempBitmap = new Bitmap(img.Width, img.Height);
-            battleSpriteSheetPicBox.Image = tempBitmap;
-
-            using (Graphics g = Graphics.FromImage(battleSpriteSheetPicBox.Image))
-                g.DrawImage(img, 0, 0);
 
             DrawFramesOnImg(battleSpriteSheetPicBox, data.frameWidth, data.framHeight);
         }
@@ -195,13 +199,14 @@ namespace AssetCreator
             
             Image img = Image.FromStream(dlg.OpenFile());
             Bitmap tempBitmap = new Bitmap(img.Width, img.Height);
-            overworldAnims[key] = img;
-            overworldSpriteSheetPicBox.Image = tempBitmap;
 
-            using (Graphics g = Graphics.FromImage(overworldSpriteSheetPicBox.Image))
+            using (Graphics g = Graphics.FromImage(tempBitmap))
                 g.DrawImage(img, 0, 0);
 
-            DrawFramesOnImg(overworldSpriteSheetPicBox, data.frameWidth, data.framHeight);
+            overworldSpriteSheetPicBox.Image = tempBitmap;
+            overworldAnims[key] = tempBitmap;
+
+            DrawFramesOnImg(overworldSpriteSheetPicBox,  data.frameWidth, data.framHeight);
         }
 
         private void bttlFrmWdthNum_ValueChanged(object sender, EventArgs e)
@@ -223,9 +228,8 @@ namespace AssetCreator
             AnimationData data = battleAnimData[key];
             data.framHeight = (int)bttlFrmHgtNum.Value;
             battleAnimData[key] = data;
-            Bitmap img = (Bitmap)battleAnims[key] ?? new Bitmap(data.frameWidth + 1, data.framHeight + 1);
-            Bitmap tempBitmap = new Bitmap(img.Width, img.Height);
-            battleSpriteSheetPicBox.Image = tempBitmap;
+            Image img = battleAnims[key];
+            battleSpriteSheetPicBox.Image = img;
             DrawFramesOnImg(battleSpriteSheetPicBox, data.frameWidth, data.framHeight);
         }
 
@@ -326,11 +330,14 @@ namespace AssetCreator
                     tempImg = null;
                     if (tempAnim.path != "")
                     {
+                        //indexed pixel formats (BMP Files)
                         tempImg = Image.FromFile(tempAnim.path);
                         Bitmap tempBitmap = new Bitmap(tempImg.Width, tempImg.Height);
-                        battleSpriteSheetPicBox.Image = tempBitmap;
-                        using (Graphics g = Graphics.FromImage(tempImg))
+                        using (Graphics g = Graphics.FromImage(tempBitmap))
                             g.DrawImage(tempImg, 0, 0);
+
+                        battleSpriteSheetPicBox.Image = tempBitmap;
+                        tempImg = tempBitmap;
                     }
                     string[] frameSize = battleAnimNode["FrameSize"].InnerText.Split(' ');
                     tempAnim.frameWidth = int.Parse(frameSize[0]);
@@ -358,9 +365,10 @@ namespace AssetCreator
                     {
                         tempImg = Image.FromFile(tempAnim.path);
                         Bitmap tempBitmap = new Bitmap(tempImg.Width, tempImg.Height);
-                        overworldSpriteSheetPicBox.Image = tempBitmap;
-                        using (Graphics g = Graphics.FromImage(tempImg))
+                        using (Graphics g = Graphics.FromImage(tempBitmap))
                             g.DrawImage(tempImg, 0, 0);
+                        overworldSpriteSheetPicBox.Image = tempBitmap;
+                        tempImg = tempBitmap;
                     }
 
                     string[] frameSize = overworldAnimNode["FrameSize"].InnerText.Split(' ');

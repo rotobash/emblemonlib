@@ -18,15 +18,11 @@ namespace AssetCreator
 {
     public partial class CharacterCreator : Form
     {
-        string moveListPath;
-        string[] loadedMoveStrArr;
-        int moveIndex;
         List<string> knownMoveStrList;
 
         void LoadMovesTab()
         {
             knownMoveStrList = new List<string>();
-            moveIndex = 0;
         }
 
 

@@ -23,16 +23,7 @@ namespace AssetCreator
     static class Program
 #endif
     {
-        private static Game1 game;
-
-        internal static void RunGame()
-        {
-            game.Run();
-#if !__IOS__ && !__TVOS__
-            game.Dispose();
-#endif
-        }
-
+        
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -43,20 +34,7 @@ namespace AssetCreator
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //TODO: multithread
             Application.Run(new CreatorSelect());
-#if MONOMAC
-            NSApplication.Init ();
-
-            using (var p = new NSAutoreleasePool ()) {
-                NSApplication.SharedApplication.Delegate = new AppDelegate();
-                NSApplication.Main(args);
-            }
-#elif __IOS__ || __TVOS__
-            UIApplication.Main(args, null, "AppDelegate");
-#else
-            //RunGame();
-#endif
         }
 
 #if __IOS__ || __TVOS__

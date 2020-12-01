@@ -24,12 +24,6 @@ namespace AssetCreator
     public partial class CharacterCreator : Form
     {
         string loadedCharacterPath;
-        Game1 game;
-
-        BattleCharacter battleChar;
-        HybridCharacter hybridChar;
-        OverworldCharacter overChar;
-
         CharacterType charType;
 
         public CharacterCreator()
@@ -70,7 +64,9 @@ namespace AssetCreator
             }
             catch (XmlException ex)
             {
-                MessageBox.Show("Could not load character, file may be corrupt.");
+                
+                MessageBox.Show("Could not load character, file may be corrupt. \n"
+                   + ex.Message );
                 return;
             }
             XmlNode body = doc["Character"];
