@@ -30,5 +30,15 @@ namespace AssetCreator
             new CharacterCreator().ShowDialog();
             Show();
         }
+
+        private void itemCreatorBtn_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void questCreatorBtn_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
