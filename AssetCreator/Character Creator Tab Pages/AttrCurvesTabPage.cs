@@ -129,37 +129,50 @@ namespace AssetCreator
         {
             string selectedType = attrCurveFnComboBox.GetItemText(attrCurveFnComboBox.SelectedItem);
             curve.type = (FunctionType)Enum.Parse(typeof(FunctionType), selectedType);
-            DrawCurve(attrCurvePicBox, new LevelingCurve(curve.type, curve.power, curve.xSkew, curve.ySkew, curve.xOffset, curve.yOffset));
+            DrawCurve(attrCurvePicBox, GetLevelingCurve());
         }
 
         private void attrCurvePwrNumBox_ValueChanged(object sender, EventArgs e)
         {
             curve.power = (double)attrCurvePwrNumBox.Value;
-            DrawCurve(attrCurvePicBox, new LevelingCurve(curve.type, curve.power, curve.xSkew, curve.ySkew, curve.xOffset, curve.yOffset));
+            DrawCurve(attrCurvePicBox, GetLevelingCurve());
         }
 
         private void attrCurveXSkewNumBox_ValueChanged(object sender, EventArgs e)
         {
             curve.xSkew = (double)attrCurveXSkewNumBox.Value;
-            DrawCurve(attrCurvePicBox, new LevelingCurve(curve.type, curve.power, curve.xSkew, curve.ySkew, curve.xOffset, curve.yOffset));
+            DrawCurve(attrCurvePicBox, GetLevelingCurve());
         }
 
         private void attrCurveYSkewNumBox_ValueChanged(object sender, EventArgs e)
         {
             curve.ySkew = (double)attrCurveYSkewNumBox.Value;
-            DrawCurve(attrCurvePicBox, new LevelingCurve(curve.type, curve.power, curve.xSkew, curve.ySkew, curve.xOffset, curve.yOffset));
+            DrawCurve(attrCurvePicBox, GetLevelingCurve());
         }
 
         private void attrCurveXOffNumBox_ValueChanged(object sender, EventArgs e)
         {
             curve.xOffset = (double)attrCurveXOffNumBox.Value;
-            DrawCurve(attrCurvePicBox, new LevelingCurve(curve.type, curve.power, curve.xSkew, curve.ySkew, curve.xOffset, curve.yOffset));
+            DrawCurve(attrCurvePicBox, GetLevelingCurve());
         }
 
         private void attrCurveYOffNumBox_ValueChanged(object sender, EventArgs e)
         {
             curve.yOffset = (double)attrCurveYOffNumBox.Value;
-            DrawCurve(attrCurvePicBox, new LevelingCurve(curve.type, curve.power, curve.xSkew, curve.ySkew, curve.xOffset, curve.yOffset));
+            DrawCurve(attrCurvePicBox, GetLevelingCurve());
+        }
+
+        private LevelingCurve GetLevelingCurve()
+        {
+            return new LevelingCurve()
+            {
+                Function = curve.type,
+                Power = curve.power,
+                XSkew = curve.xSkew,
+                YSkew = curve.ySkew,
+                XOffset = curve.xOffset,
+                YOffset = curve.yOffset
+            };
         }
 
 

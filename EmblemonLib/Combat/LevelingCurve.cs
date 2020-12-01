@@ -19,10 +19,12 @@ namespace EmblemonLib.Combat
 		/// <summary>
 		/// If function is polynomial, then this is the power of which to raise X by.
 		/// If the function is logarithmic or exponential, then this is the base of those functions.
-		/// E.G. If function is polynomial and power = 2, then the result is X^(2)
+		/// </summary>
+		/// <example>
+		/// If function is polynomial and power = 2, then the result is X^(2)
 		/// If function is exponential and power = e, then the result is e^(X)
 		/// If function is logarithmic and power = e, then the result is ln(x)
-		/// </summary>
+		/// </example>
 		public double Power { get; set; }
 
 		public double XOffset { get; set; }
@@ -47,16 +49,16 @@ namespace EmblemonLib.Combat
 			switch(Function) 
 			{
 				case FunctionType.Linear:
-					functionAtX = ( (XSkew/YSkew) * level + YOffset);
+					functionAtX = ( (XSkew/YSkew) * (level + XOffset) + YOffset);
 					break;
 				case FunctionType.Logarithmic:
-					functionAtX = Math.Log ((XSkew / YSkew) * level, Power) + YOffset;
+					functionAtX = Math.Log ((XSkew / YSkew) * (level + XOffset), Power) + YOffset;
 					break;
 				case FunctionType.Polynomial:
-					functionAtX = Math.Pow((XSkew / YSkew) * level, Power) + YOffset;
+					functionAtX = Math.Pow((XSkew / YSkew) * (level + XOffset), Power) + YOffset;
 					break;
 				case FunctionType.Exponential:
-					functionAtX = Math.Pow(Power, (XSkew / YSkew) * level) + YOffset;
+					functionAtX = Math.Pow(Power, (XSkew / YSkew) * (level + XOffset)) + YOffset;
 					break;
 				default:
 					functionAtX = 0;
