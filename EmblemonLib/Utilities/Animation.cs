@@ -6,142 +6,159 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace EmblemonLib.Utilities
 {
-	public class Animation
-	{
-		bool isSpriteSheet;
-		double timePassed;
+    public class Animation
+    {
+        readonly bool isSpriteSheet;
+        readonly bool onetimerun;
+        readonly Texture2D spriteSheet;
+        readonly List<Texture2D> frameData;
+        readonly int totalFrames;
 
-		bool onetimerun;
-		bool paused = false;
-		bool stopped = false;
+        int currentFrameIndex;
+        double timePassed;
+        bool paused = false;
+        bool stopped = false;
+        Rectangle currentFrame;
 
-		Texture2D spriteSheet;
-		Rectangle currentFrame;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmblemonLib.Utilities.Animation"/> class.
+        /// </summary>
+        /// <param name="frameData">The frames of the animation.</param>
+        /// <param name="location">Where to draw the animation.</param>
+        /// <param name="delay">Time between frames.</param>
+        public Animation(List<Texture2D> frameData, double delay = 0.25f, bool onetimerun = false)
+        {
+            isSpriteSheet = false;
+            this.frameData = frameData;
+            Delay = delay;
+            Location = Vector2.Zero;
+            this.onetimerun = onetimerun;
 
-		List<Texture2D> frameData;
-		int totalFrames;
-		int currentFrameIndex;
+            currentFrameIndex = 0;
+            totalFrames = frameData.Count;
+        }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="EmblemonLib.Utilities.Animation"/> class.
-		/// </summary>
-		/// <param name="frameData">The frames of the animation.</param>
-		/// <param name="location">Where to draw the animation.</param>
-		/// <param name="delay">Time between frames.</param>
-		public Animation (List<Texture2D> frameData, double delay=0.25f, bool onetimerun=false)
-		{
-			isSpriteSheet = false;
-			this.frameData = frameData;
-			Delay = delay;
-			Location = Vector2.Zero;
-			this.onetimerun = onetimerun;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmblemonLib.Utilities.Animation"/> class.
+        /// </summary>
+        /// <param name="spriteSheet">Sprite sheet.</param>
+        /// <param name="frameSize">The size of any frame of animation for the spritesheet. X=width, Y=height</param>
+        /// <param name="location">Where to draw the animation.</param>
+        /// <param name="delay">Time between delays.</param>
+        public Animation(Texture2D spriteSheet, Point frameSize, double delay = 0.25f, bool onetimerun = false)
+        {
+            isSpriteSheet = true;
+            this.spriteSheet = spriteSheet;
+            Delay = delay;
+            Location = Vector2.Zero;
+            this.onetimerun = onetimerun;
 
-			currentFrameIndex = 0;
-			totalFrames = frameData.Count;
-		}
+            currentFrame = new Rectangle(0, 0, frameSize.X, frameSize.Y);
+        }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="EmblemonLib.Utilities.Animation"/> class.
-		/// </summary>
-		/// <param name="spriteSheet">Sprite sheet.</param>
-		/// <param name="frameSize">The size of any frame of animation for the spritesheet. X=width, Y=height</param>
-		/// <param name="location">Where to draw the animation.</param>
-		/// <param name="delay">Time between delays.</param>
-		public Animation(Texture2D spriteSheet, Point frameSize, double delay=0.25f, bool onetimerun=false) 
-		{
-			isSpriteSheet = true;
-			this.spriteSheet = spriteSheet;
-			Delay = delay;
-			Location = Vector2.Zero;
-			this.onetimerun = onetimerun;
+        public void Update(GameTime gameTime)
+        {
+            timePassed = (paused || stopped) ? 0 : timePassed + gameTime.ElapsedGameTime.TotalSeconds;
+            if (timePassed >= Delay)
+            {
+                timePassed = 0;
+                if (isSpriteSheet)
+                {
+                    currentFrame.X += currentFrame.Width;
+                    if (currentFrame.X >= spriteSheet.Bounds.Width)
+                    {
+                        currentFrame.X = 0;
+                        currentFrame.Y = (currentFrame.Y >= spriteSheet.Bounds.Height) ? 0 : currentFrame.Y + currentFrame.Height;
+                        stopped = onetimerun;
+                        HasFinished = onetimerun;
+                    }
+                }
+                else
+                {
+                    currentFrameIndex = (currentFrameIndex >= totalFrames) ? 0 : ++currentFrameIndex;
+                    stopped = onetimerun;
+                    HasFinished = onetimerun;
+                }
+            }
+        }
 
-			currentFrame = new Rectangle(0, 0, frameSize.X, frameSize.Y);
-		}
+        public void Start()
+        {
+            if (stopped)
+            {
+                if (isSpriteSheet)
+                {
+                    currentFrame.X = 0;
+                    currentFrame.Y = 0;
+                }
+                else
+                {
+                    currentFrameIndex = 0;
+                }
+            }
+            paused = false;
+            stopped = false;
+            HasFinished = false;
+        }
 
-		public void Update(GameTime gameTime) {
-			timePassed = (paused || stopped) ? 0 : timePassed + gameTime.ElapsedGameTime.TotalSeconds;
-			if (timePassed >= Delay) { 
-				timePassed = 0;
-				if (isSpriteSheet) {
-					currentFrame.X += currentFrame.Width;
-					if (currentFrame.X >= spriteSheet.Bounds.Width) {
-						currentFrame.X = 0;
-						currentFrame.Y = (currentFrame.Y >= spriteSheet.Bounds.Height) ? 0 : currentFrame.Y + currentFrame.Height;
-						if (onetimerun) {
-							stopped = true;
-							HasFinished = true;
-						}
-					}
-				} else {
-					currentFrameIndex = (currentFrameIndex >= totalFrames) ? 0 : ++currentFrameIndex;
-					if (onetimerun) {
-						stopped = true;
-						HasFinished = true;
-					}
-				}
-			}
-		}
+        public void Pause()
+        {
+            paused = true;
+        }
 
-		public void Start() {
-			if (stopped) {
-				if (isSpriteSheet) {
-					currentFrame.X = 0;
-					currentFrame.Y = 0;
-				} else {
-					currentFrameIndex = 0;
-				}
-			}
-			paused = false;
-			stopped = false;
-			HasFinished = false;
-		}
+        public void Stop()
+        {
+            stopped = true;
+            HasFinished = true;
+        }
 
-		public void Pause() {
-			paused = true;
-		}
+        /// <summary>
+        /// Draws the current frame of animation.
+        /// </summary>
+        /// <param name="spriteBatch">An instantiated copy of the spritebatch.</param>
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            if (!paused)
+            {
+                if (isSpriteSheet)
+                {
+                    spriteBatch.Draw(spriteSheet, Location, currentFrame, Color.White);
+                }
+                else
+                {
+                    spriteBatch.Draw(frameData[currentFrameIndex], Location, Color.White);
+                }
+            }
+        }
 
-		public void Stop() {
-			stopped = true;
-			HasFinished = true;
-		}
+        public void DrawOvertop(SpriteBatch spriteBatch, Animation otherAnimation)
+        {
+            otherAnimation.Draw(spriteBatch);
+            this.Draw(spriteBatch);
+        }
 
-		/// <summary>
-		/// Draws the current frame of animation.
-		/// </summary>
-		/// <param name="spriteBatch">An instantiated copy of the spritebatch.</param>
-		public void Draw(SpriteBatch spriteBatch) {
-			if (!paused) {
-				if (isSpriteSheet) {
-					spriteBatch.Draw (spriteSheet, Location, currentFrame, Color.White);
-				} else {
-					spriteBatch.Draw (frameData [currentFrameIndex], Location, Color.White);
-				}
-			}
-		}
+        public void UpdateLocation(Vector2 newLocation)
+        {
+            Location = newLocation;
+        }
 
-		public void DrawOvertop(SpriteBatch spriteBatch, Animation otherAnimation) {
-			otherAnimation.Draw (spriteBatch);
-			this.Draw (spriteBatch);
-		}
+        public Vector2 Location
+        {
+            get;
+            private set;
+        }
 
-		public void UpdateLocation(Vector2 newLocation) {
-			Location = newLocation;
-		}
+        public double Delay
+        {
+            get;
+            private set;
+        }
 
-		public Vector2 Location {
-			get;
-			private set;
-		}
-
-		public double Delay {
-			get;
-			private set;
-		}
-
-		public bool HasFinished {
-			get;
-			private set;
-		}
-	}
+        public bool HasFinished
+        {
+            get;
+            private set;
+        }
+    }
 }
 

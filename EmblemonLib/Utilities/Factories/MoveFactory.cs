@@ -11,25 +11,9 @@ namespace EmblemonLib.Utilities
 {
     public class MoveFactory
     {
-        static MoveFactory instance = new MoveFactory();
-        //keep memory of moves we've loaded
-        Dictionary<string, Move> movesLoaded = new Dictionary<string, Move>();
+        public Dictionary<string, Move> GetAllMovesLoaded { get; } = new Dictionary<string, Move>();
 
-        public Dictionary<string, Move> GetAllMovesLoaded
-        {
-            get
-            {
-                return movesLoaded;
-            }
-        }
-
-        public static MoveFactory GetInstance
-        {
-            get
-            {
-                return instance;
-            }
-        }
+        public static MoveFactory GetInstance { get; } = new MoveFactory();
 
         public Move GetOrLoadMove(string path, ContentManager cm)
         {
@@ -39,8 +23,8 @@ namespace EmblemonLib.Utilities
 
             string name = moveXml["Name"].InnerText;
 
-            if (movesLoaded.ContainsKey(name))
-                return movesLoaded[name];
+            if (GetAllMovesLoaded.ContainsKey(name))
+                return GetAllMovesLoaded[name];
 
             return BuildMove(moveXml, name, cm);
         }
@@ -137,7 +121,18 @@ namespace EmblemonLib.Utilities
             Point tempPoint = new Point(int.Parse(parsedPoint[0]), int.Parse(parsedPoint[1]));
             overlay = new Animation(cm.Load<Texture2D>(node["Texture"].InnerText), tempPoint, 0.25f, true);
 
-			return new Move(name, power, cost, inflictChance, target, method, infliction, effect, overlay);
+			return new Move()
+            {
+                Name = name,
+                Power = power,
+                Cost = cost, 
+                InflictChance = inflictChance, 
+                Target = target, 
+                Method = method, 
+                Infliction = infliction, 
+                Effect = effect, 
+                Overlay = overlay
+            };
         }
     }
 }

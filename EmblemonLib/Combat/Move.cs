@@ -12,83 +12,34 @@ namespace EmblemonLib.Combat
     public enum Effect { Damaging, Curative, None }
 
     public class Move
-	{
-        Animation overlay;
+    {
+        public Animation Overlay { get; set; }
+        public string Name { get; set; }
+        public int Power { get; set; }
+        public int Cost { get; set; }
+        public float InflictChance { get; set; }
+        public Target Target { get; set; }
+        public Method Method { get; set; }
+        public StatusInfliction Infliction { get; set; }
+        public Effect Effect { get; set; }
 
-		public Move (string name, int power, int cost, float inflictChance, Target target, Method method, 
-			StatusInfliction infliction, Effect effect, Animation animation)
+        public Move()
         {
-            Name = name;
-            Power = power;
-			Cost = cost;
-            InflictChance = inflictChance;
-            Target = target;
-            Method = method;
-            Infliction = infliction;
-            Effect = effect;
-            overlay = animation;
         }
 
-        public string Name
+        public void Update(GameTime gameTime)
         {
-            get;
-            private set;
+            Overlay.Update(gameTime);
         }
-
-        public int Power
+        public void Draw(SpriteBatch spriteBatch)
         {
-            get;
-            private set;
-        }
-
-		public int Cost {
-			get;
-			private set;
-		}
-
-        public float InflictChance
-        {
-            get;
-            private set;
-        }
-
-        public Target Target
-        {
-            get;
-            private set;
-        }
-
-        public Method Method
-        {
-            get;
-            private set;
-        }
-
-        public StatusInfliction Infliction
-        {
-            get;
-            private set;
-        }
-
-        public Effect Effect
-        {
-            get;
-            private set;
-        }
-
-        public void Update (GameTime gameTime)
-        {
-            overlay.Update(gameTime);
-        }
-		public void Draw (SpriteBatch spriteBatch)
-        {
-            overlay.Draw(spriteBatch);
+            Overlay.Draw(spriteBatch);
         }
 
         public void UpdateLocation(Vector2 newLocation)
         {
-            overlay.UpdateLocation(newLocation);
+            Overlay.UpdateLocation(newLocation);
         }
-	}
+    }
 }
 

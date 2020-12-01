@@ -13,15 +13,7 @@ namespace EmblemonLib.Utilities
 {
     public class CharacterFactory
     {
-        static CharacterFactory instance = new CharacterFactory();
-
-        public static CharacterFactory GetInstance
-        {
-            get
-            {
-                return instance;
-            }
-        }
+        public static CharacterFactory GetInstance { get; } = new CharacterFactory();
 
         public virtual HybridCharacter BuildHybrid(string path, ContentManager cm)
         {
@@ -111,25 +103,34 @@ namespace EmblemonLib.Utilities
 
         CharacterStats LoadStats(XmlNode node)
         {
-            int health, magic, stamina, level, strength, defense, power, fortitude, speed;
             int statParseSucess = 0;
 
-            statParseSucess = int.TryParse(node["Health"].InnerText, out health) ? ++statParseSucess : statParseSucess;
-            statParseSucess = int.TryParse(node["Magic"].InnerText, out magic) ? ++statParseSucess : statParseSucess;
-            statParseSucess = int.TryParse(node["Stamina"].InnerText, out stamina) ? ++statParseSucess : statParseSucess;
-            statParseSucess = int.TryParse(node["Level"].InnerText, out level) ? ++statParseSucess : statParseSucess;
+            statParseSucess = int.TryParse(node["Health"].InnerText, out int health) ? ++statParseSucess : statParseSucess;
+            statParseSucess = int.TryParse(node["Magic"].InnerText, out int magic) ? ++statParseSucess : statParseSucess;
+            statParseSucess = int.TryParse(node["Stamina"].InnerText, out int stamina) ? ++statParseSucess : statParseSucess;
+            statParseSucess = int.TryParse(node["Level"].InnerText, out int level) ? ++statParseSucess : statParseSucess;
 
-            statParseSucess = int.TryParse(node["Strength"].InnerText, out strength) ? ++statParseSucess : statParseSucess;
-            statParseSucess = int.TryParse(node["Defense"].InnerText, out defense) ? ++statParseSucess : statParseSucess;
-            statParseSucess = int.TryParse(node["Power"].InnerText, out power) ? ++statParseSucess : statParseSucess;
-            statParseSucess = int.TryParse(node["Fortitude"].InnerText, out fortitude) ? ++statParseSucess : statParseSucess;
-            statParseSucess = int.TryParse(node["Speed"].InnerText, out speed) ? ++statParseSucess : statParseSucess;
+            statParseSucess = int.TryParse(node["Strength"].InnerText, out int strength) ? ++statParseSucess : statParseSucess;
+            statParseSucess = int.TryParse(node["Defense"].InnerText, out int defense) ? ++statParseSucess : statParseSucess;
+            statParseSucess = int.TryParse(node["Power"].InnerText, out int power) ? ++statParseSucess : statParseSucess;
+            statParseSucess = int.TryParse(node["Fortitude"].InnerText, out int fortitude) ? ++statParseSucess : statParseSucess;
+            statParseSucess = int.TryParse(node["Speed"].InnerText, out int speed) ? ++statParseSucess : statParseSucess;
 
             if (statParseSucess != CharacterStats.STATNUMBER)
                 throw new FormatException("All stats were not parsed successfully");
 
-            CharacterStats stats = new CharacterStats();
-            stats.LoadStats(health, magic, stamina, level, strength, defense, power, fortitude, speed);
+            CharacterStats stats = new CharacterStats()
+            {
+                Health = health,
+                Magic = magic,
+                Stamina = stamina,
+                Level = level,
+                Strength = strength,
+                Defense = defense,
+                Power = power,
+                Fortitude = fortitude,
+                Speed = speed
+            };
 
             return stats;
         }
@@ -137,12 +138,6 @@ namespace EmblemonLib.Utilities
         LevelingCurve LoadCurve(XmlNode node)
         {
             FunctionType type;
-            double functionPower;
-            double xSkew;
-            double ySkew;
-            double xOffset;
-            double yOffset;
-
             switch (node["Type"].InnerText)
             {
                 case "Polynomial":
@@ -158,12 +153,16 @@ namespace EmblemonLib.Utilities
                     type = FunctionType.Linear;
                     break;
             }
-            functionPower = double.Parse(node["Power"].InnerText);
-            xSkew = double.Parse(node["xSkew"].InnerText);
-            ySkew = double.Parse(node["ySkew"].InnerText);
-            xOffset = double.Parse(node["xOffset"].InnerText);
-            yOffset = double.Parse(node["yOffset"].InnerText);
-            return new LevelingCurve(type, functionPower, xSkew, ySkew, xOffset, yOffset);
+
+            return new LevelingCurve()
+            {
+                Function = type,
+                Power = double.Parse(node["Power"].InnerText),
+                XSkew = double.Parse(node["xSkew"].InnerText),
+                YSkew = double.Parse(node["ySkew"].InnerText),
+                XOffset = double.Parse(node["xOffset"].InnerText),
+                YOffset = double.Parse(node["yOffset"].InnerText)
+            };
         }
 
         Dictionary<string, LevelingCurve> LoadCurves(XmlNode node)
