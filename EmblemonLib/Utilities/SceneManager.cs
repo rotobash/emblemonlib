@@ -9,39 +9,41 @@ using EmblemonLib.Interfaces;
 
 namespace EmblemonLib.Utilities
 {
-	public class SceneManager : Dictionary<string, Scene>
+	public class SceneManager
 	{
-		ContentManager content;
-
-		public string CurrentScene {
-			get;
-			private set;
-		}
+        readonly ContentManager content;
+        readonly Stack<Scene> sceneStack;
 
 		//
-		public SceneManager (ContentManager content) : base ()
+		public SceneManager (ContentManager content)
 		{
-			this.content = content;	
+			this.content = content;
+			sceneStack = new Stack<Scene>();
 		}
 
-		public void Update(GameTime gameTime) {
-			this [CurrentScene].Update (gameTime);
+		public void Update(GameTime gameTime)
+		{
+			sceneStack.Peek().Update(gameTime);
 		}
 
-		void LoadScene() {
-			this [CurrentScene].Load (content);
+		public void Draw(SpriteBatch spriteBatch)
+		{
+			foreach (var scene in sceneStack)
+            {
+				scene.Draw(spriteBatch);
+            }
 		}
 
-		public void Draw(SpriteBatch spriteBatch) {
-			this [CurrentScene].Draw (spriteBatch);
+		public void PushNewScene(Scene item)
+        {
+			item.Load(content);
+			sceneStack.Push(item);
 		}
 
-		public void ChangeScene(string name) {
-			if (ContainsKey (name)) {
-				this [CurrentScene].Unload ();
-				CurrentScene = name;
-				LoadScene ();
-			}
+		public void PopScene()
+        {
+			var scene = sceneStack.Pop();
+			scene.Unload();
 		}
 	}
 }
