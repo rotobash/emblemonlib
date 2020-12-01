@@ -20,6 +20,12 @@ namespace EmblemonLib.Utilities
         bool stopped = false;
         Rectangle currentFrame;
 
+        public Vector2 Location { get; set; }
+
+        public double Delay { get; private set; }
+
+        public bool HasFinished { get; private set;  }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EmblemonLib.Utilities.Animation"/> class.
         /// </summary>
@@ -135,29 +141,6 @@ namespace EmblemonLib.Utilities
         {
             otherAnimation.Draw(spriteBatch);
             this.Draw(spriteBatch);
-        }
-
-        public void UpdateLocation(Vector2 newLocation)
-        {
-            Location = newLocation;
-        }
-
-        public Vector2 Location
-        {
-            get;
-            private set;
-        }
-
-        public double Delay
-        {
-            get;
-            private set;
-        }
-
-        public bool HasFinished
-        {
-            get;
-            private set;
         }
     }
 }

@@ -8,40 +8,48 @@ namespace EmblemonLib.Utilities
 	public class PathAnimation
 	{
 		List<Animation> movingAnims;
-        Animation movingAnim;
-        bool singleAnimation;
-
 		List<Animation> staticAnims;
-		float movementSpeed;
-		Vector2 destinationVec;
+        Queue<MotionTween> motionPaths;
+
+        MotionTween currentPath;
 
 		public bool HasFinished {
 			get;
 			private set;
 		}
 
-		public PathAnimation (List<Animation> movingAnimations, List<Animation> staticAnimations, Vector2 destination, float speed=1f)
+		public PathAnimation (List<Animation> movingAnimations, List<Animation> staticAnimations, List<MotionTween> paths)
 		{
 			movingAnims = movingAnimations;
             staticAnims = staticAnimations;
 
-            singleAnimation = false;
-			destinationVec = destination;
-			movementSpeed = speed;
+            motionPaths = new Queue<MotionTween>();
+            foreach (var path in paths)
+            {
+			    motionPaths.Enqueue(path);
+            }
+            SetNextPath();
         }
 
-        public PathAnimation(Animation animation, List<Animation> staticAnimations, Vector2 destination, float speed = 1f)
+        public PathAnimation(Animation animation, List<Animation> staticAnimations, List<MotionTween> paths)
         {
-            movingAnim = animation;
+            movingAnims = new List<Animation>() 
+            { 
+                animation
+            };
+
             staticAnims = staticAnimations;
 
-            singleAnimation = true;
-            destinationVec = destination;
-            movementSpeed = speed;
+            motionPaths = new Queue<MotionTween>();
+            foreach (var path in paths)
+            {
+                motionPaths.Enqueue(path);
+            }
+            SetNextPath();
         }
 
-        public void Update(GameTime gameTime) {
-
+        public void Update(GameTime gameTime)
+        {
             UpdateAnimations(gameTime);
 
             if (staticAnims != null)
@@ -56,47 +64,38 @@ namespace EmblemonLib.Utilities
 
         void UpdateAnimations(GameTime gameTime)
         {
+            currentPath.Update(gameTime);
             for (int i = 0; i < movingAnims.Count; i++)
             {
-                bool positionChanged = UpdatePosition(movingAnims[i]);
-                if (positionChanged)
-                    movingAnim.Update(gameTime);
-                else
-                {
-                    movingAnims.RemoveAt(i);
-                    i--;
-                }
+                var movingAnim = movingAnims[i];
+                movingAnim.Location = currentPath.CurrentPosition;
+                movingAnim.Update(gameTime);
+            }
+
+            if (!currentPath.Moving)
+            {
+                SetNextPath();
             }
         }
 
-        bool UpdatePosition(Animation movingAnim)
+        public void Draw(SpriteBatch spritebatch)
         {
-            float x = 0, y = 0;
-
-            if (movingAnim.Location.Y < destinationVec.Y)
+			foreach (Animation staticAnim in staticAnims)
             {
-                y = movementSpeed;
-
-            }
-            if (movingAnim.Location.X < destinationVec.X)
-            {
-                x = movementSpeed;
-            }
-            if (x != 0f && y != 0f) {
-                movingAnim.UpdateLocation(movingAnim.Location + new Vector2(x, y));
-                return true;
-            }
-            return false;
-        }
-
-        public void Draw(SpriteBatch spritebatch) {
-			foreach (Animation staticAnim in staticAnims) {
-				staticAnim.Draw (spritebatch);
+				staticAnim.Draw(spritebatch);
 			}
-			foreach (Animation movingAnim in movingAnims) {
-				movingAnim.Draw (spritebatch);
+
+			foreach (Animation movingAnim in movingAnims) 
+            {
+				movingAnim.Draw(spritebatch);
 			}
 		}
+
+        private void SetNextPath()
+        {
+            currentPath = motionPaths.Dequeue();
+            currentPath.Reset();
+        }
 	    
 	}
 }
